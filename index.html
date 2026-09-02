@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1a1a2e">
     <title>kuis irodori estetik</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
@@ -11,6 +12,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
         html, body {
+            position: fixed; inset: 0;
             width: 100%; height: 100%; min-height: 100vh;
             background-color: #1a1a2e; color: #fff;
             display: flex; justify-content: center; align-items: center; 
@@ -21,11 +23,10 @@
             html, body { height: 100dvh; min-height: 100dvh; }
         }
 
-        /* KHUSUS IPHONE: Maksa 3D Transform biar CPU kaga nangis nahan efek blur */
+        /* HAPUS PAKSAAN GPU BIAR IPHONE KAGA NGOS-NGOSAN */
         #layer-belakang {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             z-index: -10; pointer-events: none; overflow: hidden; background: #1a1a2e;
-            transform: translate3d(0, 0, 0);
         }
 
         .bg-blur {
@@ -33,8 +34,6 @@
             object-fit: cover; object-position: center;
             filter: blur(20px) brightness(0.4); 
             transition: opacity 1s ease-in-out;
-            will-change: opacity, transform;
-            transform: translate3d(0, 0, 0); /* Boost buat iOS */
         }
 
         .mobile-wrapper {
@@ -46,9 +45,7 @@
         .wrapper-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; object-position: center;
-            z-index: 1; transition: opacity 1s ease-in-out;
-            will-change: opacity, transform; pointer-events: none;
-            transform: translate3d(0, 0, 0); /* Boost buat iOS */
+            z-index: 1; transition: opacity 1s ease-in-out; pointer-events: none;
         }
 
         .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.15); z-index: 2; pointer-events: none;}
@@ -59,6 +56,7 @@
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             overflow-y: auto; overflow-x: hidden; z-index: 10;
             -ms-overflow-style: none; scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
         }
         .scroll-area::-webkit-scrollbar { display: none; }
 
@@ -233,7 +231,6 @@
         <div id="flash-overlay"></div>
         <div class="low-hp-vignette" id="low-hp-vignette"></div>
 
-        <!-- Tambahin atribut PRELOAD="AUTO" khusus hape biar ga buffer -->
         <audio id="bgm-siang" src="bgm-siang.mp3" loop preload="auto"></audio>
         <audio id="bgm-malem" src="bgm-malem.mp3" loop preload="auto"></audio>
         <audio id="sfx-heartbeat" src="https://assets.mixkit.co/active_storage/sfx/2578/2578-preview.mp3" loop preload="auto"></audio>
@@ -343,10 +340,10 @@
         function maininSound(id) {
             let sound = document.getElementById(id);
             sound.currentTime = 0;
-            sound.play().catch(e => console.log('auto-play ketahan'));
+            let p = sound.play();
+            if(p !== undefined) p.catch(e => console.log('auto-play ketahan'));
         }
 
-        // FUNGSI TOGGLE YANG UDAH DI BANTAI BIAR MATI TOTAL KALO DIPENCET
         function toggleBgm() {
             maininSound('sfx-click');
             bgmOn = !bgmOn;
@@ -365,7 +362,6 @@
             }
         }
 
-        // FUNGSI CROSSFADE ANTI BOCOR
         function crossfadeBGM(tipe) {
             if (currentBgm === tipe) return;
             let bgmSiang = document.getElementById('bgm-siang');
@@ -382,17 +378,18 @@
                 return;
             }
 
-            bgmIn.volume = 0;
-            bgmIn.play().catch(e => console.log('bgm ditahan browser'));
+            bgmIn.volume = 0.1;
+            let p = bgmIn.play();
+            if(p !== undefined) p.catch(e => console.log('bgm ditahan browser'));
 
             fadeIntervalId = setInterval(() => {
-                let outVol = bgmOut.volume - 0.1; // Fade out dibikin lebih galak
+                let outVol = bgmOut.volume - 0.1;
                 let inVol = bgmIn.volume + 0.1;
                 
                 if(outVol <= 0) {
                     outVol = 0;
-                    bgmOut.pause(); // Paksa matiin fungsi play di detik ini juga
-                    bgmOut.currentTime = 0; // Rewind ke detik 0
+                    bgmOut.pause(); 
+                    bgmOut.currentTime = 0; 
                 }
                 if(inVol >= 1) inVol = 1;
 
@@ -452,6 +449,18 @@
 
         function login() {
             maininSound('sfx-click');
+
+            // HACK IPHONE: Nyolong start play audio biar diijinin iOS
+            let audios = ['bgm-siang', 'bgm-malem', 'sfx-heartbeat', 'sfx-correct', 'sfx-wrong', 'sfx-win', 'sfx-lose'];
+            audios.forEach(id => {
+                let a = document.getElementById(id);
+                a.volume = 0;
+                let p = a.play();
+                if(p !== undefined) {
+                    p.then(() => { a.pause(); a.currentTime = 0; a.volume = 1; }).catch(e=>{});
+                }
+            });
+
             let nama = document.getElementById('input-nama').value.toLowerCase().trim();
             if(!nama) return alert("isi nama dulu boss!");
             
@@ -682,11 +691,12 @@
             crossfadeBGM('malem'); gantiBackground('malem'); 
 
             let title = document.getElementById('result-title');
+            /* EMOTICON UDAH DIBABAT ABIS BIAR KAGA NGALANGIN VISUAL ART */
             if(modeGame === 'sprint' || modeGame === 'survival') {
-                title.innerText = statusMenang ? "wih ayangcu lebih dipilh belly" : "yah telat ayang😂";
-                if(modeGame === 'survival' && !statusMenang) title.innerText = "yah mati duluan ayang 😂";
-                if(modeGame === 'survival' && statusMenang) title.innerText = "anjay lu survive ayangcu 🔥";
-            } else { title.innerText = statusMenang ? "kuis kelar abangku 🔥" : "selesai!"; }
+                title.innerText = statusMenang ? "wih ayangcu lebih dipilh belly" : "yah telat ayang";
+                if(modeGame === 'survival' && !statusMenang) title.innerText = "yah mati duluan ayang";
+                if(modeGame === 'survival' && statusMenang) title.innerText = "anjay lu survive ayangcu";
+            } else { title.innerText = statusMenang ? "kuis kelar abangku" : "selesai!"; }
 
             document.getElementById('skor-akhir').innerText = `skor ayang: ${skor} / ${soalKuis.length}`;
 
