@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1a1a2e">
     <title>kuis irodori estetik</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
@@ -11,6 +12,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
         html, body {
+            position: fixed; inset: 0;
             width: 100%; height: 100%; min-height: 100vh;
             background-color: #1a1a2e; color: #fff;
             display: flex; justify-content: center; align-items: center; 
@@ -22,7 +24,7 @@
         }
 
         #layer-belakang {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             z-index: -10; pointer-events: none; overflow: hidden; background: #1a1a2e;
         }
 
@@ -43,8 +45,7 @@
         .wrapper-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; object-position: center;
-            z-index: 1; transition: opacity 1s ease-in-out;
-            will-change: opacity; pointer-events: none;
+            z-index: 1; transition: opacity 1s ease-in-out; pointer-events: none;
         }
 
         .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.15); z-index: 2; pointer-events: none;}
@@ -55,6 +56,7 @@
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             overflow-y: auto; overflow-x: hidden; z-index: 10;
             -ms-overflow-style: none; scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
         }
         .scroll-area::-webkit-scrollbar { display: none; }
 
@@ -87,6 +89,7 @@
             background: rgba(0, 0, 0, 0.25); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
             border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transform: translateZ(0); backface-visibility: hidden;
         }
 
         #question-box {
@@ -95,6 +98,7 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
             transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
             opacity: 1; transform: scale(1) translateY(0);
+            will-change: transform, opacity; backface-visibility: hidden;
         }
 
         .glass-result {
@@ -189,7 +193,7 @@
         }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); backface-visibility: hidden; will-change: transform, opacity;}
         .active-screen { display: flex; flex-direction: column; justify-content: center; opacity: 1; transform: scale(1) translateY(0); }
         
         .bab-list { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px;}
@@ -197,7 +201,7 @@
         .bab-list label:hover { background: rgba(255,255,255,0.2); }
         .bab-list input { margin-right: 5px; }
 
-        .review-box { background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); }
+        .review-box { background: rgba(0,0,0,0.4); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); transform: translateZ(0); backface-visibility: hidden; }
         .benar-text { color: #00e676; font-weight: bold;}
         .salah-text { color: #ff1744; font-weight: bold;}
 
@@ -213,31 +217,31 @@
         <img src="anggun-normal.png"><img src="anggun-senyum.png"><img src="anggun-marah.png"><img src="anggun-peluk-belly.png">
     </div>
 
+    <!-- SEMUA GIF YANG KAGA KEPAKE DIBIKIN VISIBILITY HIDDEN BIAR IPHONE KAGA NGOS-NGOSAN -->
     <div id="layer-belakang">
-        <img class="bg-blur" id="blur-siang" src="bg-siang.gif" style="opacity: 1;">
-        <img class="bg-blur" id="blur-siang-swap" src="bg-siang-swap.gif" style="opacity: 0;">
-        <img class="bg-blur" id="blur-malem" src="bg-malem.gif" style="opacity: 0;">
+        <img class="bg-blur" id="blur-siang" src="bg-siang.gif" style="opacity: 1; visibility: visible;">
+        <img class="bg-blur" id="blur-siang-swap" src="bg-siang-swap.gif" style="opacity: 0; visibility: hidden;">
+        <img class="bg-blur" id="blur-malem" src="bg-malem.gif" style="opacity: 0; visibility: hidden;">
     </div>
 
     <div class="mobile-wrapper" id="mobile-wrap">
         
-        <img class="wrapper-bg" id="wrap-siang" src="bg-siang.gif" style="opacity: 1;">
-        <img class="wrapper-bg" id="wrap-siang-swap" src="bg-siang-swap.gif" style="opacity: 0;">
-        <img class="wrapper-bg" id="wrap-malem" src="bg-malem.gif" style="opacity: 0;">
+        <img class="wrapper-bg" id="wrap-siang" src="bg-siang.gif" style="opacity: 1; visibility: visible;">
+        <img class="wrapper-bg" id="wrap-siang-swap" src="bg-siang-swap.gif" style="opacity: 0; visibility: hidden;">
+        <img class="wrapper-bg" id="wrap-malem" src="bg-malem.gif" style="opacity: 0; visibility: hidden;">
         
         <div class="overlay"></div>
         <div id="flash-overlay"></div>
         <div class="low-hp-vignette" id="low-hp-vignette"></div>
 
-        <!-- Preload audio dihapus biar browser ga nge-glitch di awal -->
-        <audio id="bgm-siang" src="bgm-siang.mp3" loop></audio>
-        <audio id="bgm-malem" src="bgm-malem.mp3" loop></audio>
-        <audio id="sfx-heartbeat" src="https://assets.mixkit.co/active_storage/sfx/2578/2578-preview.mp3" loop></audio>
-        <audio id="sfx-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
-        <audio id="sfx-correct" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"></audio>
-        <audio id="sfx-wrong" src="https://assets.mixkit.co/active_storage/sfx/2997/2997-preview.mp3"></audio>
-        <audio id="sfx-win" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
-        <audio id="sfx-lose" src="https://assets.mixkit.co/active_storage/sfx/3129/3129-preview.mp3"></audio>
+        <audio id="bgm-player" src="bgm-siang.mp3" loop preload="auto"></audio>
+        
+        <audio id="sfx-heartbeat" src="https://assets.mixkit.co/active_storage/sfx/2578/2578-preview.mp3" loop preload="auto"></audio>
+        <audio id="sfx-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
+        <audio id="sfx-correct" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3" preload="auto"></audio>
+        <audio id="sfx-wrong" src="https://assets.mixkit.co/active_storage/sfx/946/946-preview.mp3" preload="auto"></audio>
+        <audio id="sfx-win" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
+        <audio id="sfx-lose" src="https://assets.mixkit.co/active_storage/sfx/3129/3129-preview.mp3" preload="auto"></audio>
 
         <div class="popup-overlay" id="popup-marah"><img src="" class="popup-img" id="img-marah"></div>
         <div class="popup-overlay" id="popup-senyum"><img src="" class="popup-img" id="img-senyum"></div>
@@ -334,6 +338,7 @@
         let gameInterval; let isGameOver = false;
         let currentBgm = null; let bgmOn = true;
         let bgSiangPlayer = 'siang'; 
+        let fadeIntervalId; 
         
         function maininSound(id) {
             let sound = document.getElementById(id);
@@ -342,21 +347,24 @@
             if(p !== undefined) p.catch(e => console.log('auto-play sfx ketahan'));
         }
 
-        // FUNGSI GANTI BGM: BRUTAL KILL (Sapu bersih lagu lama, kaga ada overlap)
-        function playBgm(tipe) {
+        function crossfadeBGM(tipe) {
             currentBgm = tipe;
-            let siang = document.getElementById('bgm-siang');
-            let malem = document.getElementById('bgm-malem');
+            let player = document.getElementById('bgm-player');
+            
+            if(!bgmOn) {
+                player.pause();
+                return;
+            }
 
-            // Matiin paksa dua-duanya tanpa ampun
-            siang.pause(); siang.volume = 0; siang.currentTime = 0;
-            malem.pause(); malem.volume = 0; malem.currentTime = 0;
+            let fileLagu = (tipe === 'siang') ? 'bgm-siang.mp3' : 'bgm-malem.mp3';
 
-            if(!bgmOn) return;
-
-            let laguTarget = tipe === 'siang' ? siang : malem;
-            laguTarget.volume = 1;
-            let p = laguTarget.play();
+            if (!player.src.includes(fileLagu)) {
+                player.src = fileLagu;
+                player.load(); 
+            }
+            
+            player.volume = 1;
+            let p = player.play();
             if(p !== undefined) p.catch(e => console.log('iOS nahan BGM: ', e));
         }
 
@@ -364,23 +372,38 @@
             maininSound('sfx-click');
             bgmOn = !bgmOn;
             let btn = document.getElementById('btn-bgm');
-            let siang = document.getElementById('bgm-siang');
-            let malem = document.getElementById('bgm-malem');
+            let player = document.getElementById('bgm-player');
 
             if(!bgmOn) {
-                siang.pause(); malem.pause();
+                player.pause();
                 btn.innerText = "🔇";
             } else {
-                playBgm(currentBgm);
+                crossfadeBGM(currentBgm);
                 btn.innerText = "🔊";
             }
         }
 
+        // FUNGSI GANTI BACKGROUND DENGAN VISIBILITY CULLING BUAT IPHONE
         function gantiBackground(tipe) {
             let bgs = ['siang', 'siang-swap', 'malem'];
             bgs.forEach(b => {
-                document.getElementById('blur-' + b).style.opacity = (b === tipe) ? '1' : '0';
-                document.getElementById('wrap-' + b).style.opacity = (b === tipe) ? '1' : '0';
+                let blurEl = document.getElementById('blur-' + b);
+                let wrapEl = document.getElementById('wrap-' + b);
+                
+                if (b === tipe) {
+                    blurEl.style.visibility = 'visible';
+                    wrapEl.style.visibility = 'visible';
+                    blurEl.style.opacity = '1';
+                    wrapEl.style.opacity = '1';
+                } else {
+                    blurEl.style.opacity = '0';
+                    wrapEl.style.opacity = '0';
+                    // Nunggu transisi opacity kelar baru dicabut total dari mesin render
+                    setTimeout(() => {
+                        if (blurEl.style.opacity === '0') blurEl.style.visibility = 'hidden';
+                        if (wrapEl.style.opacity === '0') wrapEl.style.visibility = 'hidden';
+                    }, 1000); 
+                }
             });
         }
 
@@ -424,13 +447,12 @@
         function login() {
             maininSound('sfx-click');
 
-            // HACK IPHONE: Pancing semua audio nyala sepersekian detik pake sentuhan lu ini.
-            // Ini ngebuka gembok security Safari biar lagu bisa dipanggil kapan aja!
             let audios = document.querySelectorAll('audio');
             audios.forEach(a => {
+                a.volume = 0; 
                 let p = a.play();
                 if(p !== undefined) {
-                    p.then(() => { a.pause(); }).catch(e=>{});
+                    p.then(() => { a.pause(); a.currentTime = 0; a.volume = 1; }).catch(e=>{});
                 }
             });
 
@@ -452,8 +474,7 @@
             document.getElementById('sapaan-home').innerText = `Semangat Belajarnya ${nama}!`;
             document.getElementById('btn-bgm').style.display = 'block'; 
             
-            // Nyalain BGM Siang
-            playBgm('siang'); 
+            crossfadeBGM('siang'); 
             pindahScreen('screen-home');
         }
 
@@ -663,8 +684,7 @@
         function munculResult(statusMenang) {
             document.getElementById('bottom-controls').style.display = 'none';
             pindahScreen('screen-result');
-            playBgm('malem'); // MANGGIL LAGU MALEM SECARA BRUTAL CUT
-            gantiBackground('malem'); 
+            crossfadeBGM('malem'); gantiBackground('malem'); 
 
             let title = document.getElementById('result-title');
             if(modeGame === 'sprint' || modeGame === 'survival') {
@@ -688,7 +708,7 @@
 
         function kembaliHome() {
             maininSound('sfx-click');
-            playBgm('siang'); // MANGGIL BALIK LAGU SIANG SECARA BRUTAL CUT
+            crossfadeBGM('siang'); 
             gantiBackground(bgSiangPlayer); 
             pindahScreen('screen-home');
         }
