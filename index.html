@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>kuis irodori estetik</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
+        
+        body {
+            background-color: #1a1a2e; color: #fff;
+            height: 100vh; display: flex; justify-content: center; overflow: hidden;
+        }
+
+        /* PERBAIKAN 1: Tag Image native, dikasih hardware acceleration biar GPU ga ngos-ngosan */
+        .bg-blur {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            object-fit: cover; object-position: center;
+            filter: blur(20px) brightness(0.4); z-index: -3; 
+            transition: opacity 1s ease-in-out;
+            transform: scale(1.15) translateZ(0); /* translateZ(0) ini kuncian biar kaga ngelag/gempa */
+            will-change: opacity; pointer-events: none;
+        }
+
+        .mobile-wrapper {
+            position: relative; width: 100%; max-width: 480px; height: 100vh;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8); z-index: 1; 
+            display: flex; flex-direction: column; overflow: hidden; background-color: #1a1a2e;
+        }
+
+        .wrapper-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; object-position: center;
+            z-index: -2; transition: opacity 1s ease-in-out;
+            transform: translateZ(0); will-change: opacity; pointer-events: none;
+        }
+
+        .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.15); z-index: -1; }
+        
+        /* PERBAIKAN 2: Scroll dikunci pake overflow-y: scroll biar kaga ada shift/geser frame */
+        .scroll-area {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            overflow-y: scroll; overflow-x: hidden; z-index: 10;
+            display: flex; flex-direction: column; align-items: center;
+            -ms-overflow-style: none; scrollbar-width: none;
+        }
+        .scroll-area::-webkit-scrollbar { display: none; }
+
+        .bottom-controls {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            display: flex; justify-content: center; z-index: 50; pointer-events: none;
+        }
+        
+        .btn-minimal {
+            background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.8); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 13px;
+            cursor: pointer; backdrop-filter: blur(4px); transition: all 0.3s ease;
+            pointer-events: auto; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .btn-minimal:hover { background: rgba(255,255,255,0.6); color: #fff; transform: translateY(-2px); border-color: rgba(255,255,255,0.5); }
+
+        .btn-icon {
+            background: transparent; border: none; color: #fff; font-size: 24px; cursor: pointer;
+            transition: 0.2s; text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .btn-icon:hover { transform: scale(1.1); }
+
+        .app-container { width: 100%; max-width: 480px; padding: 40px 20px; display: flex; flex-direction: column; gap: 20px; margin: 0 auto; }
+
+        .glass-box {
+            background: rgba(0, 0, 0, 0.25); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        #question-box {
+            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px);
+            border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            opacity: 1; transform: scale(1) translateY(0);
+        }
+
+        .glass-result {
+            background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; 
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 25px; box-shadow: none; 
+        }
+
+        h1, h2, h3 { text-align: center; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        p { text-align: center; margin-bottom: 15px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); }
+
+        input[type="text"] {
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3); outline: none;
+            background: rgba(255, 255, 255, 0.1); color: #fff; font-weight: bold; margin-bottom: 15px;
+            backdrop-filter: blur(4px); text-align: center;
+        }
+        input[type="text"]::placeholder { color: rgba(255, 255, 255, 0.6); }
+
+        .btn {
+            display: block; width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(4px);
+            color: white; font-size: 18px; font-weight: 900; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: all 0.2s; margin-bottom: 10px;
+        }
+        .btn:hover, .btn:active { background: rgba(255, 255, 255, 0.25); transform: scale(0.97); }
+
+        .furigana-toggle { display: flex; justify-content: flex-end; align-items: center; gap: 10px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); }
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.2); transition: .4s; border-radius: 34px; border: 1px solid rgba(255,255,255,0.4); }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        input:checked + .slider { background-color: rgba(255,255,255,0.5); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .opsi-btn {
+            display: block; width: 100%; padding: 15px; margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px);
+            border: 1px solid rgba(255,255,255,0.4); border-radius: 12px; color: white; font-weight: bold; font-size: 16px;
+            cursor: pointer; transition: 0.2s; text-align: left; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+        }
+        .opsi-btn:hover, .opsi-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.98); }
+
+        ruby { font-size: 28px; font-weight: 900; color: #ffeb3b; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
+        rt { font-size: 14px; color: #fff; }
+
+        #game-ui { margin-top: 30px; margin-bottom: 35px; padding: 0 25px; position: relative; } 
+
+        .bar-container {
+            width: 100%; height: 28px; background: rgba(0,0,0,0.5); border-radius: 15px; position: relative; overflow: visible; 
+            border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .midpoint { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.2); z-index: 1; }
+        
+        .avatar-bar {
+            width: 60px; height: 60px; object-fit: cover; aspect-ratio: 1/1;
+            border-radius: 50%; border: 3px solid rgba(255,255,255,0.8);
+            position: absolute; top: 50%; z-index: 3; box-shadow: 0 4px 15px rgba(0,0,0,0.7); background-color: #1a1a2e; 
+        }
+        .avatar-left { left: 0%; transform: translate(-50%, -50%); } 
+        .avatar-right { left: 100%; transform: translate(-50%, -50%); } 
+
+        .chat-bubble {
+            position: absolute; top: -35px; background: rgba(255,255,255,0.9); color: #000;
+            padding: 5px 12px; border-radius: 12px; font-weight: 900; font-size: 12px;
+            opacity: 0; transform: translateY(10px) scale(0.8); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 5; pointer-events: none; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .bubble-show { opacity: 1; transform: translateY(0) scale(1); }
+        .chat-left { left: -15px; } .chat-right { right: -15px; }
+
+        .love-icon { position: absolute; top: -65px; width: 50px; height: auto; transition: left 0.4s ease-in-out; z-index: 4; mix-blend-mode: screen; transform: translateX(-50%); }
+        .belly-icon { position: absolute; top: 50%; height: 75px; width: auto; z-index: 2; transition: left 0.5s ease-out; }
+
+        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        .flash-red { animation: flashred 0.5s ease-out; }
+        .flash-green { animation: flashgreen 0.5s ease-out; }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-5px, 0, 0); } 20%, 80% { transform: translate3d(5px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-10px, 0, 0); } 40%, 60% { transform: translate3d(10px, 0, 0); }
+        }
+        @keyframes flashred { 0% { background-color: rgba(255, 0, 0, 0.6); } 100% { background-color: transparent; } }
+        @keyframes flashgreen { 0% { background-color: rgba(0, 255, 100, 0.6); } 100% { background-color: transparent; } }
+
+        .low-hp-vignette { position: absolute; top:0; left:0; right:0; bottom:0; z-index: 99; pointer-events: none; opacity: 0; transition: opacity 0.5s; box-shadow: inset 0 0 80px rgba(255,0,0,0.8); }
+        .low-hp-on { opacity: 1; animation: pulse 1s infinite alternate; }
+        @keyframes pulse { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .popup-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 999; }
+        .popup-img { max-width: 85%; max-height: 65vh; width: auto; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); object-fit: cover; animation: popIn 0.3s ease-out; }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .active-screen { display: block; opacity: 1; transform: scale(1) translateY(0); }
+        
+        .bab-list { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px;}
+        .bab-list label { background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); transition: 0.2s;}
+        .bab-list label:hover { background: rgba(255,255,255,0.2); }
+        .bab-list input { margin-right: 5px; }
+
+        .review-box { background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); }
+        .benar-text { color: #00e676; font-weight: bold;}
+        .salah-text { color: #ff1744; font-weight: bold;}
+
+        #area-upload { margin-bottom: 20px; }
+        #file-excel { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <!-- LAYER BLUR (Pake tag IMG asli biar GIF di-decode mulus sama browser) -->
+    <img class="bg-blur" id="blur-siang" src="bg-siang.gif" style="opacity: 1;">
+    <img class="bg-blur" id="blur-siang-swap" src="bg-siang-swap.gif" style="opacity: 0;">
+    <img class="bg-blur" id="blur-malem" src="bg-malem.gif" style="opacity: 0;">
+
+    <div class="mobile-wrapper" id="mobile-wrap">
+        <!-- LAYER BACKGROUND DALEM -->
+        <img class="wrapper-bg" id="wrap-siang" src="bg-siang.gif" style="opacity: 1;">
+        <img class="wrapper-bg" id="wrap-siang-swap" src="bg-siang-swap.gif" style="opacity: 0;">
+        <img class="wrapper-bg" id="wrap-malem" src="bg-malem.gif" style="opacity: 0;">
+        
+        <div class="overlay"></div>
+        <div class="overlay" id="flash-overlay" style="z-index: 100; pointer-events: none; background: transparent;"></div>
+        <div class="low-hp-vignette" id="low-hp-vignette"></div>
+
+        <audio id="bgm-siang" src="bgm-siang.mp3" loop></audio>
+        <audio id="bgm-malem" src="bgm-malem.mp3" loop></audio>
+        <audio id="sfx-heartbeat" src="https://assets.mixkit.co/active_storage/sfx/2578/2578-preview.mp3" loop></audio>
+        <audio id="sfx-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+        <audio id="sfx-correct" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"></audio>
+        <audio id="sfx-wrong" src="https://assets.mixkit.co/active_storage/sfx/2997/2997-preview.mp3"></audio>
+        <audio id="sfx-win" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+        <audio id="sfx-lose" src="https://assets.mixkit.co/active_storage/sfx/3129/3129-preview.mp3"></audio>
+
+        <div class="popup-overlay" id="popup-marah"><img src="" class="popup-img" id="img-marah"></div>
+        <div class="popup-overlay" id="popup-senyum"><img src="" class="popup-img" id="img-senyum"></div>
+        <div class="popup-overlay" id="popup-ending"><img src="" class="popup-img" id="img-ending"></div>
+
+        <!-- Pop up confirm -->
+        <div class="popup-overlay" id="custom-confirm">
+            <div class="glass-box" style="text-align: center; max-width: 80%;">
+                <h3 style="margin-bottom: 20px;">yakin mau udahan?</h3>
+                <button class="opsi-btn" onclick="confirmQuitYes()" style="text-align: center; background: rgba(255, 50, 50, 0.3);">keluar aja 🏠</button>
+                <button class="opsi-btn" onclick="confirmQuitNo()" style="text-align: center; background: rgba(50, 255, 50, 0.3);">lanjut main 🔥</button>
+            </div>
+        </div>
+
+        <!-- SCROLL AREA -->
+        <div class="scroll-area">
+            <div class="app-container">
+                <div id="screen-login" class="screen active-screen glass-box">
+                    <h1>おかえり！</h1>
+                    <p>yoo, siapa yang lagi main nih?</p>
+                    <input type="text" id="input-nama" placeholder="ketik nama lu..." autocomplete="off">
+                    <button class="btn" onclick="login()">masuk</button>
+                </div>
+
+                <div id="screen-home" class="screen glass-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h2 id="sapaan-home" style="margin-bottom: 0;"></h2>
+                        <button class="btn-icon" id="btn-bgm" onclick="toggleBgm()" style="display: none;">🔊</button>
+                    </div>
+                    
+                    <div id="area-upload">
+                        <p style="font-size: 14px; font-weight: normal; color: #ddd;">*kalo lu pake live server, kosakata.xlsx bakal ke-load otomatis</p>
+                        <input type="file" id="file-excel" accept=".xlsx, .xls">
+                    </div>
+                    
+                    <div id="setup-bab" style="display:none;">
+                        <p>pilih bab yang mau dibantai</p>
+                        <div class="bab-list" id="daftar-bab"></div>
+
+                        <div class="furigana-toggle">
+                            <span>pake furigana?</span>
+                            <label class="switch">
+                                <input type="checkbox" id="toggle-furigana" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <br>
+                        <button class="btn" onclick="mulai('quiz')">mode santuy (quiz)</button>
+                        <button class="btn" onclick="mulai('sprint')">mode sprint (tarik tambang)</button>
+                        <button class="btn" onclick="mulai('survival')">mode survival (bertahan)</button>
+                    </div>
+                </div>
+
+                <div id="screen-play" class="screen">
+                    <div id="game-ui" style="display: none;">
+                        <div class="bar-container">
+                            <img src="" class="avatar-bar avatar-left" id="avatar-kiri">
+                            <div id="bubble-kiri" class="chat-bubble chat-left"></div>
+                            
+                            <img src="" class="avatar-bar avatar-right" id="avatar-kanan">
+                            <div id="bubble-kanan" class="chat-bubble chat-right"></div>
+                            
+                            <div class="midpoint"></div>
+                            <img src="icon-love.gif" id="love-icon" class="love-icon" style="left: 0%;">
+                            <img src="belly-lari.gif" class="belly-icon" id="belly-pos">
+                        </div>
+                    </div>
+
+                    <div id="question-box">
+                        <h3 id="progress-soal">soal 1 / 10</h3>
+                        <div id="tempat-soal" style="text-align: center; margin-bottom: 20px;"></div>
+                        <div id="tempat-opsi"></div>
+                    </div>
+                </div>
+
+                <div id="screen-result" class="screen glass-result" style="margin-top: 15vh;">
+                    <h1 id="result-title"></h1>
+                    <h2 id="skor-akhir"></h2>
+                    <div id="review-salah" style="max-height: 250px; overflow-y: auto; margin-bottom: 20px; padding-right: 5px;"></div>
+                    <button class="btn" onclick="kembaliHome()">🏠 balik home</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-controls" id="bottom-controls" style="display: none;">
+            <button class="btn-minimal" onclick="quitGame()">keluar game</button>
+        </div>
+    </div>
+
+    <script>
+        let dataVocab = [];
+        let soalKuis = []; let soalSekarang = 0; let skor = 0; let salahList = [];
+        let playerUtama = ""; let playerLawan = "";
+        let modeGame = 'quiz'; let combo = 0;
+        let bellyPos = 50; let bellyScaleX = -1; 
+        let gameInterval; let isGameOver = false;
+        let currentBgm = null; let bgmOn = true;
+        let bgSiangPlayer = 'siang'; 
+        
+        function maininSound(id) {
+            let sound = document.getElementById(id);
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log('auto-play ketahan'));
+        }
+
+        function toggleBgm() {
+            maininSound('sfx-click');
+            bgmOn = !bgmOn;
+            let btn = document.getElementById('btn-bgm');
+            let bgmSiang = document.getElementById('bgm-siang');
+            let bgmMalem = document.getElementById('bgm-malem');
+
+            if(!bgmOn) {
+                bgmSiang.pause(); bgmMalem.pause();
+                btn.innerText = "🔇";
+            } else {
+                if(currentBgm === 'siang') bgmSiang.play().catch(e=>{});
+                else if(currentBgm === 'malem') bgmMalem.play().catch(e=>{});
+                btn.innerText = "🔊";
+            }
+        }
+
+        function crossfadeBGM(tipe) {
+            if (currentBgm === tipe) return;
+            let bgmSiang = document.getElementById('bgm-siang');
+            let bgmMalem = document.getElementById('bgm-malem');
+            let bgmIn = tipe === 'siang' ? bgmSiang : bgmMalem;
+            let bgmOut = tipe === 'siang' ? bgmMalem : bgmSiang;
+            
+            currentBgm = tipe;
+            if(!bgmOn) {
+                bgmOut.pause(); bgmOut.volume = 0;
+                bgmIn.pause(); bgmIn.volume = 1;
+                return;
+            }
+
+            bgmIn.volume = 0;
+            bgmIn.play().catch(e => console.log('bgm ditahan browser'));
+
+            let fadeInterval = setInterval(() => {
+                if (bgmOut.volume > 0.05) bgmOut.volume -= 0.05;
+                if (bgmIn.volume < 0.95) bgmIn.volume += 0.05;
+                if (bgmOut.volume <= 0.05 && bgmIn.volume >= 0.95) {
+                    bgmOut.volume = 0; bgmOut.pause();
+                    bgmIn.volume = 1; clearInterval(fadeInterval);
+                }
+            }, 100);
+        }
+
+        // FUNGSI GANTI BACKGROUND ANTI GEMPA
+        function gantiBackground(tipe) {
+            let bgs = ['siang', 'siang-swap', 'malem'];
+            bgs.forEach(b => {
+                document.getElementById('blur-' + b).style.opacity = (b === tipe) ? '1' : '0';
+                document.getElementById('wrap-' + b).style.opacity = (b === tipe) ? '1' : '0';
+            });
+        }
+
+        function popBubble(posisi, teks) {
+            let bub = document.getElementById(`bubble-${posisi}`);
+            bub.innerText = teks; bub.classList.add('bubble-show');
+            setTimeout(() => { bub.classList.remove('bubble-show'); }, 2000);
+        }
+
+        window.onload = () => {
+            fetch('kosakata.xlsx')
+                .then(res => { if(!res.ok) throw new Error('file ga nemu'); return res.arrayBuffer(); })
+                .then(data => {
+                    let wb = XLSX.read(new Uint8Array(data), {type: 'array'});
+                    let sheet = wb.Sheets[wb.SheetNames[0]];
+                    dataVocab = XLSX.utils.sheet_to_json(sheet);
+                    document.getElementById('area-upload').style.display = 'none'; 
+                    renderBabList();
+                })
+                .catch(err => { console.log('excel ga auto-load, silakan upload manual.'); });
+        };
+
+        document.getElementById('file-excel').addEventListener('change', (e) => {
+            let reader = new FileReader(); reader.readAsArrayBuffer(e.target.files[0]);
+            reader.onload = (e) => {
+                let wb = XLSX.read(new Uint8Array(reader.result), {type: 'array'});
+                let sheet = wb.Sheets[wb.SheetNames[0]];
+                dataVocab = XLSX.utils.sheet_to_json(sheet);
+                renderBabList();
+            };
+        });
+
+        function renderBabList() {
+            let babs = [...new Set(dataVocab.map(item => item.bab))].sort((a,b)=>a-b);
+            let htmlBab = '';
+            babs.forEach(b => { htmlBab += `<label><input type="checkbox" class="cek-bab" value="${b}"> bab ${b}</label>`; });
+            document.getElementById('daftar-bab').innerHTML = htmlBab;
+            document.getElementById('setup-bab').style.display = 'block';
+        }
+
+        function login() {
+            maininSound('sfx-click');
+            let nama = document.getElementById('input-nama').value.toLowerCase().trim();
+            if(!nama) return alert("isi nama dulu boss!");
+            
+            if(nama === "anggun") { 
+                playerUtama = "anggun"; playerLawan = "aksa"; 
+                bgSiangPlayer = 'siang-swap'; 
+            } 
+            else if (nama === "aksa" || nama === "nanda" || nama === "ananda") { 
+                playerUtama = "aksa"; playerLawan = "anggun"; 
+                bgSiangPlayer = 'siang'; 
+            } 
+            else { return alert("nama kaga kedaftar di sistem, masukin nama lu ato anggun dah"); }
+
+            gantiBackground(bgSiangPlayer); 
+            
+            document.getElementById('sapaan-home').innerText = `yoo, semangat belajarnya ${nama}!`;
+            document.getElementById('btn-bgm').style.display = 'block'; 
+            crossfadeBGM('siang'); 
+            pindahScreen('screen-home');
+        }
+
+        function acak(arr) { return arr.sort(() => Math.random() - 0.5); }
+        function cariPengecoh(jawabanBener, kolom) {
+            let kumpul = dataVocab.map(k => k[kolom]).filter(v => v && v !== jawabanBener);
+            return acak(kumpul).slice(0, 3);
+        }
+
+        function mulai(pilihanMode) {
+            maininSound('sfx-click');
+            let babDipilih = Array.from(document.querySelectorAll('.cek-bab:checked')).map(cb => parseInt(cb.value));
+            if(babDipilih.length === 0) return alert("centang minimal satu bab coy!");
+
+            modeGame = pilihanMode; combo = 0; isGameOver = false;
+            document.getElementById('low-hp-vignette').classList.remove('low-hp-on');
+            document.getElementById('sfx-heartbeat').pause();
+            
+            document.getElementById('bottom-controls').style.display = 'flex';
+            
+            let filterData = dataVocab.filter(k => babDipilih.includes(k.bab));
+            soalKuis = [];
+            filterData.forEach(k => {
+                soalKuis.push({ tipe: 'arti', kanji: k.kanji, furigana: k.cara_baca, arti: k.arti, bener: k.arti, opsi: acak([k.arti, ...cariPengecoh(k.arti, 'arti')]) });
+                soalKuis.push({ tipe: 'jepang', tanya: `bhs jepangnya:<br><b style="font-size:22px;">"${k.arti}"</b>`, bener: k.kanji, opsi: acak([k.kanji, ...cariPengecoh(k.kanji, 'kanji')]) });
+            });
+
+            soalKuis = acak(soalKuis); soalSekarang = 0; skor = 0; salahList = [];
+            
+            if(modeGame === 'sprint' || modeGame === 'survival') {
+                document.getElementById('game-ui').style.display = 'block';
+                document.getElementById('avatar-kanan').src = `${playerUtama}-normal.png`;
+                document.getElementById('avatar-kiri').src = `${playerLawan}-normal.png`;
+                bellyPos = 50; bellyScaleX = -1; updateBelly();
+                gameInterval = setInterval(gameLoop, 1000); 
+            } else { document.getElementById('game-ui').style.display = 'none'; }
+
+            pindahScreen('screen-play'); tampilSoal();
+        }
+
+        function quitGame() {
+            maininSound('sfx-click');
+            clearInterval(gameInterval);
+            document.getElementById('custom-confirm').style.display = 'flex';
+        }
+
+        function confirmQuitYes() {
+            maininSound('sfx-click');
+            isGameOver = true;
+            document.getElementById('custom-confirm').style.display = 'none';
+            document.getElementById('low-hp-vignette').classList.remove('low-hp-on');
+            document.getElementById('sfx-heartbeat').pause();
+            
+            document.getElementById('popup-marah').style.display = 'none';
+            document.getElementById('popup-senyum').style.display = 'none';
+            document.getElementById('flash-overlay').className = 'overlay';
+            
+            document.getElementById('bottom-controls').style.display = 'none';
+            kembaliHome();
+        }
+
+        function confirmQuitNo() {
+            maininSound('sfx-click');
+            document.getElementById('custom-confirm').style.display = 'none';
+            if(modeGame === 'sprint' || modeGame === 'survival') {
+                gameInterval = setInterval(gameLoop, 1000);
+            }
+        }
+
+        function gameLoop() {
+            bellyPos -= 2; updateBelly();
+            if(bellyPos <= 0) gameOver(false);
+        }
+
+        function updateBelly() {
+            if(bellyPos < 0) bellyPos = 0; if(bellyPos > 100) bellyPos = 100;
+            
+            let iconBelly = document.getElementById('belly-pos');
+            iconBelly.style.left = `calc(40px + calc(100% - 80px) * ${bellyPos / 100})`;
+            iconBelly.style.transform = `translate(-50%, -80%) scaleX(${bellyScaleX})`;
+            
+            let love = document.getElementById('love-icon');
+            love.style.left = bellyPos > 50 ? "100%" : "0%"; 
+
+            let vignet = document.getElementById('low-hp-vignette');
+            let hb = document.getElementById('sfx-heartbeat');
+            if((modeGame === 'sprint' || modeGame === 'survival') && bellyPos <= 20 && bellyPos > 0 && !isGameOver) {
+                vignet.classList.add('low-hp-on'); if(hb.paused) hb.play().catch(e=>{});
+            } else { vignet.classList.remove('low-hp-on'); hb.pause(); }
+        }
+
+        function tampilSoal() {
+            let soal = soalKuis[soalSekarang];
+            document.getElementById('progress-soal').innerText = `soal ${soalSekarang + 1} / ${soalKuis.length}`;
+            
+            let htmlTanya = ""; let pakeFurigana = document.getElementById('toggle-furigana').checked;
+            if(soal.tipe === 'arti') {
+                if(pakeFurigana && soal.furigana) htmlTanya = `<ruby>${soal.kanji}<rt>${soal.furigana}</rt></ruby><br><p style="margin-top:10px;">artinya apaan?</p>`;
+                else htmlTanya = `<p style="font-size:32px; font-weight:900; color:#ffeb3b; text-shadow:2px 2px 4px rgba(0,0,0,0.8);">${soal.kanji}</p><p>artinya apaan?</p>`;
+            } else htmlTanya = `<p>${soal.tanya}</p>`;
+            
+            document.getElementById('tempat-soal').innerHTML = htmlTanya;
+            
+            let htmlOpsi = "";
+            soal.opsi.forEach(opt => { htmlOpsi += `<button class="opsi-btn" onclick="cekJawaban('${opt}')">${opt}</button>`; });
+            document.getElementById('tempat-opsi').innerHTML = htmlOpsi;
+        }
+
+        function cekJawaban(jawab) {
+            if(isGameOver) return;
+            let soal = soalKuis[soalSekarang];
+            let qBox = document.getElementById('question-box');
+            let flashOver = document.getElementById('flash-overlay');
+            let w = document.getElementById('mobile-wrap');
+            
+            if(jawab === soal.bener) {
+                skor++; combo++; maininSound('sfx-correct');
+                let bellyJump = 15;
+                
+                if(combo >= 3) {
+                    popBubble('kanan', acak(["mantap njer!🔥", "combo gila!", "gass terooos!"])[0]);
+                    bellyJump = 25; 
+                }
+
+                if(modeGame === 'sprint' || modeGame === 'survival') {
+                    bellyPos += bellyJump; if(modeGame === 'survival' && bellyPos > 100) bellyPos = 100; 
+                    bellyScaleX = 1; updateBelly();
+                    if(modeGame === 'sprint' && bellyPos >= 100) return gameOver(true); 
+                    setTimeout(() => { bellyScaleX = -1; updateBelly(); }, 800);
+                }
+                
+                flashOver.className = 'overlay flash-green';
+                document.getElementById('img-senyum').src = `${playerLawan}-senyum.png`;
+                document.getElementById('popup-senyum').style.display = 'flex';
+                
+                setTimeout(() => {
+                    flashOver.className = 'overlay'; document.getElementById('popup-senyum').style.display = 'none';
+                    qBox.style.opacity = '0'; qBox.style.transform = 'scale(0.95) translateY(15px)';
+                    setTimeout(() => { lanjutSoal(); }, 600); 
+                }, 1000); 
+                
+            } else {
+                combo = 0; 
+                salahList.push({ tanya: soal.tipe==='arti'? soal.kanji : soal.tanya, milih: jawab, benernya: soal.bener });
+                maininSound('sfx-wrong');
+                popBubble('kiri', acak(["kacauuu!", "yaelahh cupu", "fokus bos!"])[0]);
+                
+                w.classList.add('shake'); flashOver.className = 'overlay flash-red';
+                
+                if(modeGame === 'survival') {
+                    bellyPos -= 15; updateBelly();
+                    if(bellyPos <= 0) return setTimeout(() => { gameOver(false); }, 1000); 
+                }
+
+                document.getElementById('img-marah').src = `${playerLawan}-marah.png`;
+                document.getElementById('popup-marah').style.display = 'flex';
+                
+                setTimeout(() => {
+                    w.classList.remove('shake'); flashOver.className = 'overlay';
+                    document.getElementById('popup-marah').style.display = 'none';
+                    qBox.style.opacity = '0'; qBox.style.transform = 'scale(0.95) translateY(15px)';
+                    setTimeout(() => { lanjutSoal(); }, 600);
+                }, 1000);
+            }
+        }
+
+        function lanjutSoal() {
+            if(isGameOver) return;
+            soalSekarang++; let qBox = document.getElementById('question-box');
+            if(soalSekarang < soalKuis.length) {
+                tampilSoal(); qBox.style.opacity = '1'; qBox.style.transform = 'scale(1) translateY(0)';
+            } else {
+                if(modeGame === 'quiz' || modeGame === 'survival') gameOver(true);
+                else if(modeGame === 'sprint') {
+                    if (bellyPos > 50) gameOver(true); else gameOver(false);
+                }
+            }
+        }
+
+        function gameOver(menang) {
+            if(isGameOver) return; isGameOver = true;
+            clearInterval(gameInterval);
+            document.getElementById('low-hp-vignette').classList.remove('low-hp-on');
+            document.getElementById('sfx-heartbeat').pause();
+
+            let imgEnd = document.getElementById('img-ending');
+            if(menang) { maininSound('sfx-win'); imgEnd.src = `${playerUtama}-peluk-belly.png`; } 
+            else { maininSound('sfx-lose'); imgEnd.src = `${playerLawan}-peluk-belly.png`; }
+
+            document.getElementById('popup-ending').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('popup-ending').style.display = 'none';
+                munculResult(menang);
+            }, 2500);
+        }
+
+        function munculResult(statusMenang) {
+            document.getElementById('bottom-controls').style.display = 'none';
+            pindahScreen('screen-result');
+            crossfadeBGM('malem'); gantiBackground('malem'); 
+
+            let title = document.getElementById('result-title');
+            if(modeGame === 'sprint' || modeGame === 'survival') {
+                title.innerText = statusMenang ? "anjay nariknya jago 🔥" : "yah telat cupu lu 😂";
+                if(modeGame === 'survival' && !statusMenang) title.innerText = "yah mati duluan cupu lu 😂";
+                if(modeGame === 'survival' && statusMenang) title.innerText = "anjay lu survive abangku 🔥";
+            } else { title.innerText = statusMenang ? "kuis kelar abangku 🔥" : "selesai!"; }
+
+            document.getElementById('skor-akhir').innerText = `skor lu: ${skor} / ${soalKuis.length}`;
+
+            let htmlReview = "";
+            if(salahList.length === 0) { htmlReview = "<p class='benar-text'>gila bener semua, fix orang jepang lu!</p>"; } 
+            else {
+                htmlReview = "<h3>review salahnya niih:</h3>";
+                salahList.forEach(s => {
+                    htmlReview += `<div class="review-box"><p style="margin-bottom:5px; font-weight:bold;">soal: ${s.tanya}</p><span class="salah-text">pilihan lu: ${s.milih}</span><br><span class="benar-text">benernya: ${s.benernya}</span></div>`;
+                });
+            }
+            document.getElementById('review-salah').innerHTML = htmlReview;
+        }
+
+        function kembaliHome() {
+            maininSound('sfx-click');
+            crossfadeBGM('siang'); 
+            gantiBackground(bgSiangPlayer); 
+            pindahScreen('screen-home');
+        }
+
+        function pindahScreen(idTarget) {
+            let current = document.querySelector('.active-screen');
+            
+            if(current && current.id !== idTarget) {
+                current.style.opacity = '0';
+                current.style.transform = 'scale(0.95) translateY(10px)';
+                
+                setTimeout(() => {
+                    current.classList.remove('active-screen');
+                    current.style.display = 'none';
+                    
+                    let target = document.getElementById(idTarget);
+                    target.style.display = 'block';
+                    void target.offsetWidth; 
+                    
+                    target.classList.add('active-screen');
+                    target.style.opacity = '1';
+                    target.style.transform = 'scale(1) translateY(0)';
+                }, 400);
+            } else {
+                let target = document.getElementById(idTarget);
+                target.style.display = 'block';
+                void target.offsetWidth;
+                target.classList.add('active-screen');
+                target.style.opacity = '1';
+                target.style.transform = 'scale(1) translateY(0)';
+            }
+        }
+    </script>
+</body>
+</html>
