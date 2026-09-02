@@ -246,9 +246,9 @@
 
         <div class="popup-overlay" id="custom-confirm">
             <div class="glass-box" style="text-align: center; max-width: 80%;">
-                <h3 style="margin-bottom: 20px;">yakin mau udahan?</h3>
-                <button class="opsi-btn" onclick="confirmQuitYes()" style="text-align: center; background: rgba(255, 50, 50, 0.3);">keluar aja 🏠</button>
-                <button class="opsi-btn" onclick="confirmQuitNo()" style="text-align: center; background: rgba(50, 255, 50, 0.3);">lanjut main 🔥</button>
+                <h3 style="margin-bottom: 20px;">yakin mau keluar?</h3>
+                <button class="opsi-btn" onclick="confirmQuitYes()" style="text-align: center; background: rgba(255, 50, 50, 0.3);">iya, mau keluar</button>
+                <button class="opsi-btn" onclick="confirmQuitNo()" style="text-align: center; background: rgba(50, 255, 50, 0.3);">engga, lanjut main</button>
             </div>
         </div>
 
@@ -256,8 +256,8 @@
             <div class="app-container">
                 <div id="screen-login" class="screen active-screen glass-box">
                     <h1>おかえり！</h1>
-                    <p>yoo, siapa yang lagi main nih?</p>
-                    <input type="text" id="input-nama" placeholder="ketik nama lu..." autocomplete="off">
+                    <p>siapa ni yang lagi main?</p>
+                    <input type="text" id="input-nama" placeholder="ketik nama..." autocomplete="off">
                     <button class="btn" onclick="login()">masuk</button>
                 </div>
 
@@ -268,12 +268,12 @@
                     </div>
                     
                     <div id="area-upload">
-                        <p style="font-size: 14px; font-weight: normal; color: #ddd;">*kalo lu pake live server, kosakata.xlsx bakal ke-load otomatis</p>
+                        <p style="font-size: 14px; font-weight: normal; color: #ddd;">*</p>
                         <input type="file" id="file-excel" accept=".xlsx, .xls">
                     </div>
                     
                     <div id="setup-bab" style="display:none;">
-                        <p>pilih bab yang mau dibantai</p>
+                        <p>Pilih mau kosakata BAB berapa</p>
                         <div class="bab-list" id="daftar-bab"></div>
 
                         <div class="furigana-toggle">
@@ -284,9 +284,9 @@
                             </label>
                         </div>
                         <br>
-                        <button class="btn" onclick="mulai('quiz')">mode santuy (quiz)</button>
-                        <button class="btn" onclick="mulai('sprint')">mode sprint (tarik tambang)</button>
-                        <button class="btn" onclick="mulai('survival')">mode survival (bertahan)</button>
+                        <button class="btn" onclick="mulai('quiz')">Mode Santai</button>
+                        <button class="btn" onclick="mulai('sprint')">Mode Tarik Tambang</button>
+                        <button class="btn" onclick="mulai('survival')">Mode Bertahan</button>
                     </div>
                 </div>
 
@@ -316,7 +316,7 @@
                     <h1 id="result-title"></h1>
                     <h2 id="skor-akhir"></h2>
                     <div id="review-salah" style="max-height: 250px; overflow-y: auto; margin-bottom: 20px; padding-right: 5px;"></div>
-                    <button class="btn" onclick="kembaliHome()">🏠 balik home</button>
+                    <button class="btn" onclick="kembaliHome()">🏠 home </button>
                 </div>
             </div>
         </div>
@@ -444,11 +444,11 @@
                 playerUtama = "aksa"; playerLawan = "anggun"; 
                 bgSiangPlayer = 'siang'; 
             } 
-            else { return alert("nama kaga kedaftar di sistem, masukin nama lu ato anggun dah"); }
+            else { return alert("lau siape mpruyy"); }
 
             gantiBackground(bgSiangPlayer); 
             
-            document.getElementById('sapaan-home').innerText = `yoo, semangat belajarnya ${nama}!`;
+            document.getElementById('sapaan-home').innerText = `Semangat Belajarnya ${nama}!`;
             document.getElementById('btn-bgm').style.display = 'block'; 
             crossfadeBGM('siang'); 
             pindahScreen('screen-home');
@@ -463,7 +463,7 @@
         function mulai(pilihanMode) {
             maininSound('sfx-click');
             let babDipilih = Array.from(document.querySelectorAll('.cek-bab:checked')).map(cb => parseInt(cb.value));
-            if(babDipilih.length === 0) return alert("centang minimal satu bab coy!");
+            if(babDipilih.length === 0) return alert("centang minimal satu bab!");
 
             modeGame = pilihanMode; combo = 0; isGameOver = false;
             document.getElementById('low-hp-vignette').classList.remove('low-hp-on');
@@ -599,7 +599,7 @@
                 combo = 0; 
                 salahList.push({ tanya: soal.tipe==='arti'? soal.kanji : soal.tanya, milih: jawab, benernya: soal.bener });
                 maininSound('sfx-wrong');
-                popBubble('kiri', acak(["kacauuu!", "yaelahh cupu", "fokus bos!"])[0]);
+                popBubble('kiri', acak(["wkwkwk", "UTUTU", "sini aja belly", "yang bener atuh"])[0]);
                 
                 w.classList.add('shake'); flashOver.style.backgroundColor = "rgba(255, 0, 0, 0.6)";
                 
@@ -665,19 +665,19 @@
 
             let title = document.getElementById('result-title');
             if(modeGame === 'sprint' || modeGame === 'survival') {
-                title.innerText = statusMenang ? "anjay nariknya jago 🔥" : "yah telat cupu lu 😂";
-                if(modeGame === 'survival' && !statusMenang) title.innerText = "yah mati duluan cupu lu 😂";
-                if(modeGame === 'survival' && statusMenang) title.innerText = "anjay lu survive abangku 🔥";
+                title.innerText = statusMenang ? "wih ayangcu lebih dipilh belly" : "yah telat ayang😂";
+                if(modeGame === 'survival' && !statusMenang) title.innerText = "yah mati duluan ayang 😂";
+                if(modeGame === 'survival' && statusMenang) title.innerText = "anjay lu survive ayangcu 🔥";
             } else { title.innerText = statusMenang ? "kuis kelar abangku 🔥" : "selesai!"; }
 
             document.getElementById('skor-akhir').innerText = `skor lu: ${skor} / ${soalKuis.length}`;
 
             let htmlReview = "";
-            if(salahList.length === 0) { htmlReview = "<p class='benar-text'>gila bener semua, fix orang jepang lu!</p>"; } 
+            if(salahList.length === 0) { htmlReview = "<p class='benar-text'>gila bener semua, fix ayang anime!</p>"; } 
             else {
-                htmlReview = "<h3>review salahnya niih:</h3>";
+                htmlReview = "<h3>review salahnya ayang:</h3>";
                 salahList.forEach(s => {
-                    htmlReview += `<div class="review-box"><p style="margin-bottom:5px; font-weight:bold;">soal: ${s.tanya}</p><span class="salah-text">pilihan lu: ${s.milih}</span><br><span class="benar-text">benernya: ${s.benernya}</span></div>`;
+                    htmlReview += `<div class="review-box"><p style="margin-bottom:5px; font-weight:bold;">soal: ${s.tanya}</p><span class="salah-text">pilihan ayang: ${s.milih}</span><br><span class="benar-text">yang benernya: ${s.benernya}</span></div>`;
                 });
             }
             document.getElementById('review-salah').innerHTML = htmlReview;
