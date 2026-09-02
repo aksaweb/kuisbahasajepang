@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#1a1a2e">
     <title>kuis irodori estetik</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
@@ -12,7 +11,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
         html, body {
-            position: fixed; inset: 0;
             width: 100%; height: 100%; min-height: 100vh;
             background-color: #1a1a2e; color: #fff;
             display: flex; justify-content: center; align-items: center; 
@@ -23,9 +21,8 @@
             html, body { height: 100dvh; min-height: 100dvh; }
         }
 
-        /* HAPUS PAKSAAN GPU BIAR IPHONE KAGA NGOS-NGOSAN */
         #layer-belakang {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             z-index: -10; pointer-events: none; overflow: hidden; background: #1a1a2e;
         }
 
@@ -34,6 +31,7 @@
             object-fit: cover; object-position: center;
             filter: blur(20px) brightness(0.4); 
             transition: opacity 1s ease-in-out;
+            will-change: opacity;
         }
 
         .mobile-wrapper {
@@ -45,7 +43,8 @@
         .wrapper-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; object-position: center;
-            z-index: 1; transition: opacity 1s ease-in-out; pointer-events: none;
+            z-index: 1; transition: opacity 1s ease-in-out;
+            will-change: opacity; pointer-events: none;
         }
 
         .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.15); z-index: 2; pointer-events: none;}
@@ -56,7 +55,6 @@
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             overflow-y: auto; overflow-x: hidden; z-index: 10;
             -ms-overflow-style: none; scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
         }
         .scroll-area::-webkit-scrollbar { display: none; }
 
@@ -231,14 +229,15 @@
         <div id="flash-overlay"></div>
         <div class="low-hp-vignette" id="low-hp-vignette"></div>
 
-        <audio id="bgm-siang" src="bgm-siang.mp3" loop preload="auto"></audio>
-        <audio id="bgm-malem" src="bgm-malem.mp3" loop preload="auto"></audio>
-        <audio id="sfx-heartbeat" src="https://assets.mixkit.co/active_storage/sfx/2578/2578-preview.mp3" loop preload="auto"></audio>
-        <audio id="sfx-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
-        <audio id="sfx-correct" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3" preload="auto"></audio>
-        <audio id="sfx-wrong" src="https://assets.mixkit.co/active_storage/sfx/2997/2997-preview.mp3" preload="auto"></audio>
-        <audio id="sfx-win" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
-        <audio id="sfx-lose" src="https://assets.mixkit.co/active_storage/sfx/3129/3129-preview.mp3" preload="auto"></audio>
+        <!-- Preload audio dihapus biar browser ga nge-glitch di awal -->
+        <audio id="bgm-siang" src="bgm-siang.mp3" loop></audio>
+        <audio id="bgm-malem" src="bgm-malem.mp3" loop></audio>
+        <audio id="sfx-heartbeat" src="https://assets.mixkit.co/active_storage/sfx/2578/2578-preview.mp3" loop></audio>
+        <audio id="sfx-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+        <audio id="sfx-correct" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"></audio>
+        <audio id="sfx-wrong" src="https://assets.mixkit.co/active_storage/sfx/2997/2997-preview.mp3"></audio>
+        <audio id="sfx-win" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+        <audio id="sfx-lose" src="https://assets.mixkit.co/active_storage/sfx/3129/3129-preview.mp3"></audio>
 
         <div class="popup-overlay" id="popup-marah"><img src="" class="popup-img" id="img-marah"></div>
         <div class="popup-overlay" id="popup-senyum"><img src="" class="popup-img" id="img-senyum"></div>
@@ -335,71 +334,46 @@
         let gameInterval; let isGameOver = false;
         let currentBgm = null; let bgmOn = true;
         let bgSiangPlayer = 'siang'; 
-        let fadeIntervalId; 
         
         function maininSound(id) {
             let sound = document.getElementById(id);
             sound.currentTime = 0;
             let p = sound.play();
-            if(p !== undefined) p.catch(e => console.log('auto-play ketahan'));
+            if(p !== undefined) p.catch(e => console.log('auto-play sfx ketahan'));
+        }
+
+        // FUNGSI GANTI BGM: BRUTAL KILL (Sapu bersih lagu lama, kaga ada overlap)
+        function playBgm(tipe) {
+            currentBgm = tipe;
+            let siang = document.getElementById('bgm-siang');
+            let malem = document.getElementById('bgm-malem');
+
+            // Matiin paksa dua-duanya tanpa ampun
+            siang.pause(); siang.volume = 0; siang.currentTime = 0;
+            malem.pause(); malem.volume = 0; malem.currentTime = 0;
+
+            if(!bgmOn) return;
+
+            let laguTarget = tipe === 'siang' ? siang : malem;
+            laguTarget.volume = 1;
+            let p = laguTarget.play();
+            if(p !== undefined) p.catch(e => console.log('iOS nahan BGM: ', e));
         }
 
         function toggleBgm() {
             maininSound('sfx-click');
             bgmOn = !bgmOn;
             let btn = document.getElementById('btn-bgm');
-            let bgmSiang = document.getElementById('bgm-siang');
-            let bgmMalem = document.getElementById('bgm-malem');
+            let siang = document.getElementById('bgm-siang');
+            let malem = document.getElementById('bgm-malem');
 
             if(!bgmOn) {
-                bgmSiang.pause(); bgmMalem.pause();
-                bgmSiang.volume = 0; bgmMalem.volume = 0;
+                siang.pause(); malem.pause();
                 btn.innerText = "🔇";
             } else {
-                if(currentBgm === 'siang') { bgmSiang.volume = 1; bgmSiang.play().catch(e=>{}); }
-                else if(currentBgm === 'malem') { bgmMalem.volume = 1; bgmMalem.play().catch(e=>{}); }
+                playBgm(currentBgm);
                 btn.innerText = "🔊";
             }
-        }
-
-        function crossfadeBGM(tipe) {
-            if (currentBgm === tipe) return;
-            let bgmSiang = document.getElementById('bgm-siang');
-            let bgmMalem = document.getElementById('bgm-malem');
-            let bgmIn = tipe === 'siang' ? bgmSiang : bgmMalem;
-            let bgmOut = tipe === 'siang' ? bgmMalem : bgmSiang;
-            
-            currentBgm = tipe;
-            clearInterval(fadeIntervalId); 
-            
-            if(!bgmOn) {
-                bgmOut.pause(); bgmOut.volume = 0;
-                bgmIn.pause(); bgmIn.volume = 0;
-                return;
-            }
-
-            bgmIn.volume = 0.1;
-            let p = bgmIn.play();
-            if(p !== undefined) p.catch(e => console.log('bgm ditahan browser'));
-
-            fadeIntervalId = setInterval(() => {
-                let outVol = bgmOut.volume - 0.1;
-                let inVol = bgmIn.volume + 0.1;
-                
-                if(outVol <= 0) {
-                    outVol = 0;
-                    bgmOut.pause(); 
-                    bgmOut.currentTime = 0; 
-                }
-                if(inVol >= 1) inVol = 1;
-
-                bgmOut.volume = outVol;
-                bgmIn.volume = inVol;
-
-                if (outVol === 0 && inVol === 1) {
-                    clearInterval(fadeIntervalId);
-                }
-            }, 100);
         }
 
         function gantiBackground(tipe) {
@@ -450,14 +424,13 @@
         function login() {
             maininSound('sfx-click');
 
-            // HACK IPHONE: Nyolong start play audio biar diijinin iOS
-            let audios = ['bgm-siang', 'bgm-malem', 'sfx-heartbeat', 'sfx-correct', 'sfx-wrong', 'sfx-win', 'sfx-lose'];
-            audios.forEach(id => {
-                let a = document.getElementById(id);
-                a.volume = 0;
+            // HACK IPHONE: Pancing semua audio nyala sepersekian detik pake sentuhan lu ini.
+            // Ini ngebuka gembok security Safari biar lagu bisa dipanggil kapan aja!
+            let audios = document.querySelectorAll('audio');
+            audios.forEach(a => {
                 let p = a.play();
                 if(p !== undefined) {
-                    p.then(() => { a.pause(); a.currentTime = 0; a.volume = 1; }).catch(e=>{});
+                    p.then(() => { a.pause(); }).catch(e=>{});
                 }
             });
 
@@ -478,7 +451,9 @@
             
             document.getElementById('sapaan-home').innerText = `Semangat Belajarnya ${nama}!`;
             document.getElementById('btn-bgm').style.display = 'block'; 
-            crossfadeBGM('siang'); 
+            
+            // Nyalain BGM Siang
+            playBgm('siang'); 
             pindahScreen('screen-home');
         }
 
@@ -688,10 +663,10 @@
         function munculResult(statusMenang) {
             document.getElementById('bottom-controls').style.display = 'none';
             pindahScreen('screen-result');
-            crossfadeBGM('malem'); gantiBackground('malem'); 
+            playBgm('malem'); // MANGGIL LAGU MALEM SECARA BRUTAL CUT
+            gantiBackground('malem'); 
 
             let title = document.getElementById('result-title');
-            /* EMOTICON UDAH DIBABAT ABIS BIAR KAGA NGALANGIN VISUAL ART */
             if(modeGame === 'sprint' || modeGame === 'survival') {
                 title.innerText = statusMenang ? "wih ayangcu lebih dipilh belly" : "yah telat ayang";
                 if(modeGame === 'survival' && !statusMenang) title.innerText = "yah mati duluan ayang";
@@ -713,7 +688,7 @@
 
         function kembaliHome() {
             maininSound('sfx-click');
-            crossfadeBGM('siang'); 
+            playBgm('siang'); // MANGGIL BALIK LAGU SIANG SECARA BRUTAL CUT
             gantiBackground(bgSiangPlayer); 
             pindahScreen('screen-home');
         }
