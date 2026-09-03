@@ -69,7 +69,8 @@
         ruby { font-size: 28px; font-weight: 900; color: #ffeb3b; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
         rt { font-size: 14px; color: #fff; }
 
-        #game-ui { margin-bottom: 25px; padding: 0 25px; position: relative; } 
+        /* GAME UI HEIGHT DITURUNIN BIAR KAGA KEPOTONG LANGIT-LANGIT */
+        #game-ui { margin-top: 70px; margin-bottom: 25px; padding: 0 25px; position: relative; } 
         .bar-container { width: 100%; height: 28px; background: rgba(0,0,0,0.5); border-radius: 15px; position: relative; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .midpoint { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.2); z-index: 1; }
         .avatar-bar { width: 60px; height: 60px; object-fit: cover; aspect-ratio: 1/1; border-radius: 50%; border: 3px solid rgba(255,255,255,0.8); position: absolute; top: 50%; z-index: 3; box-shadow: 0 4px 15px rgba(0,0,0,0.7); background-color: #1a1a2e; }
@@ -100,20 +101,15 @@
         .bab-list label:hover { background: rgba(255,255,255,0.2); }
         .bab-list input { margin-right: 5px; }
 
-        /* PERBAIKAN RESULT UI: TENGAH BOLONG, TEKS NORMAL, POSISI RAPIH */
-        .glass-result { display: flex; flex-direction: column; height: 100%; justify-content: flex-start; padding: 40px 15px; background: transparent; border: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
-        .result-header { margin-bottom: auto; width: 100%; text-align: center; } /* Dorong semua elemen lain ke mentok bawah */
-        .result-body { max-height: 38vh; overflow-y: auto; padding-right: 5px; width: 100%; margin-bottom: 15px; }
-        .result-btn-wrap { width: 100%; }
-        
-        #result-title { font-size: 22px; margin-bottom: 5px; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); } /* TEKS DIPERKECIL NORMAL */
-        #skor-akhir { font-size: 18px; margin-bottom: 0; color: #ffeb3b; }
+        #screen-result { height: 100%; position: relative; padding: 0; justify-content: flex-start; }
+        .result-header { position: absolute; top: 10vh; left: 0; width: 100%; text-align: center; }
+        .result-body { position: absolute; bottom: 12vh; left: 5%; width: 90%; max-height: 40vh; overflow-y: auto; padding-right: 5px; }
+        .result-btn-wrap { position: absolute; bottom: 3vh; left: 5%; width: 90%; display: flex; justify-content: center;}
         
         .review-box { background: rgba(0,0,0,0.4); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); transform: translateZ(0); }
         .benar-text { color: #00e676; font-weight: bold;}
         .salah-text { color: #ff1744; font-weight: bold;}
 
-        /* LOADING SCREEN */
         #loading-screen { position: absolute; inset: 0; background: #1a1a2e; z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s; }
         .loading-box { width: 80%; max-width: 300px; position: relative; margin-top: 50px; }
         .progress-bg { width: 100%; height: 35px; background: rgba(255,255,255,0.2); border-radius: 18px; overflow: hidden; border: 2px solid rgba(255,255,255,0.3); }
@@ -123,7 +119,6 @@
         .belly-load-kaget { animation: bellyJatohLoad 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
         @keyframes bellyJatohLoad { 0% { transform: translateX(-50%) translateY(-20px) scale(1.1); } 100% { transform: translateX(-50%) translateY(120vh) scale(1); opacity: 0; } }
 
-        /* BELLY HOME JUMBO ANTI CROP */
         #belly-home { position: absolute; top: -75px; right: 15px; width: 150px; z-index: 10; pointer-events: none; }
         .belly-kaget { animation: bellyJatohHome 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
         @keyframes bellyJatohHome { 0% { transform: translateY(-20px) scale(1.1); } 100% { transform: translateY(120vh) scale(1); opacity: 0; } }
@@ -231,7 +226,8 @@
                     </div>
                 </div>
 
-                <div id="screen-home" class="screen" style="position: relative;">
+                <!-- KOTAK HOME UDAH DITURUNIN BIAR KAGA NYUNDUL VINYL -->
+                <div id="screen-home" class="screen" style="position: relative; margin-top: 50px;">
                     <img src="belly-goler.gif" id="belly-home" onerror="this.src='icon-love.gif'">
 
                     <div class="glass-box" style="width: 100%;">
@@ -348,7 +344,6 @@
         let loadInterval;
 
         document.addEventListener("DOMContentLoaded", () => {
-            // SUNTIKAN MEMORI MENGATASI DELAY POP-UP GAMBAR SAAT KUIS (HACK iOS)
             const preloadImages = [
                 'aksa-normal.png', 'aksa-senyum.png', 'aksa-marah.png', 'aksa-peluk-belly.png',
                 'anggun-normal.png', 'anggun-senyum.png', 'anggun-marah.png', 'anggun-peluk-belly.png',
