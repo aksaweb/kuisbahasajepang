@@ -102,27 +102,29 @@
 
         /* RESULT UI DIBELAH BIAR TENGAH BOLONG ESTETIK */
         #screen-result { height: 100%; position: relative; padding: 0; justify-content: flex-start; }
-        .result-header { position: absolute; top: 12vh; left: 0; width: 100%; text-align: center; }
-        .result-body { position: absolute; bottom: 12vh; left: 5%; width: 90%; max-height: 35vh; overflow-y: auto; padding-right: 5px; }
-        .result-btn-wrap { position: absolute; bottom: 4vh; left: 5%; width: 90%; }
+        .result-header { position: absolute; top: 10vh; left: 0; width: 100%; text-align: center; }
+        .result-body { position: absolute; bottom: 12vh; left: 5%; width: 90%; max-height: 40vh; overflow-y: auto; padding-right: 5px; }
+        .result-btn-wrap { position: absolute; bottom: 3vh; left: 5%; width: 90%; display: flex; justify-content: center;}
         
         .review-box { background: rgba(0,0,0,0.4); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); transform: translateZ(0); }
         .benar-text { color: #00e676; font-weight: bold;}
         .salah-text { color: #ff1744; font-weight: bold;}
 
-        /* LOADING SCREEN DIBIKIN PAS (BAR GEDE, BELLY KECIL) */
+        /* LOADING SCREEN GEDE & BELLY KECIL SESUAI INSTRUKSI */
         #loading-screen { position: absolute; inset: 0; background: #1a1a2e; z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s; }
         .loading-box { width: 80%; max-width: 300px; position: relative; margin-top: 50px; }
-        .progress-bg { width: 100%; height: 25px; background: rgba(255,255,255,0.2); border-radius: 12px; overflow: hidden; border: 2px solid rgba(255,255,255,0.3); }
-        .progress-bar { width: 0%; height: 100%; background: #ffeb3b; transition: width 0.3s linear; }
-        #belly-load { position: absolute; bottom: 30px; left: 0%; transform: translateX(-50%); width: 70px; transition: left 0.3s linear; z-index: 10; }
+        .progress-bg { width: 100%; height: 35px; background: rgba(255,255,255,0.2); border-radius: 18px; overflow: hidden; border: 2px solid rgba(255,255,255,0.3); }
+        .progress-bar { width: 0%; height: 100%; background: #ffeb3b; transition: width 0.15s linear; }
+        #belly-load { position: absolute; bottom: 38px; left: 0%; transform: translateX(-50%); width: 50px; transition: left 0.15s linear; z-index: 10; }
         
-        /* BELLY HOME ORNAMENT DI LUAR KOTAK KACA (ANTI CROP) */
-        #belly-home { position: absolute; top: -38px; right: 25px; width: 75px; z-index: 10; pointer-events: none; }
-        .belly-kaget { animation: bellyJatoh 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
-        @keyframes bellyJatoh { 0% { transform: translate(-50%, -20px) scale(1.1); } 100% { transform: translate(-50%, 120vh) scale(1); opacity: 0; } }
+        .belly-load-kaget { animation: bellyJatohLoad 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
+        @keyframes bellyJatohLoad { 0% { transform: translateX(-50%) translateY(-20px) scale(1.1); } 100% { transform: translateX(-50%) translateY(120vh) scale(1); opacity: 0; } }
 
-        /* VINYL PLAYER PELAN ESTETIK (PNG) */
+        /* BELLY HOME JUMBO ANTI CROP */
+        #belly-home { position: absolute; top: -75px; right: 15px; width: 150px; z-index: 10; pointer-events: none; }
+        .belly-kaget { animation: bellyJatohHome 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
+        @keyframes bellyJatohHome { 0% { transform: translateY(-20px) scale(1.1); } 100% { transform: translateY(120vh) scale(1); opacity: 0; } }
+
         .top-bar-custom { position: absolute; top: 15px; right: 15px; display: flex; align-items: center; gap: 10px; z-index: 50; }
         .vinyl-text { font-family: 'VT323', monospace; font-size: 16px; color: #ffeb3b; white-space: nowrap; overflow: hidden; max-width: 0; opacity: 0; transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1); text-shadow: 1px 1px 0px rgba(0,0,0,0.8); }
         .vinyl-text.show { max-width: 150px; opacity: 1; margin-right: 5px; }
@@ -135,7 +137,6 @@
         .btn-tts { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; border-radius: 50%; width: 35px; height: 35px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
         .btn-tts:active { transform: scale(0.9); }
 
-        /* FLASHCARD 3D */
         .fc-scene { width: 100%; height: 250px; perspective: 1000px; margin-bottom: 20px; }
         .fc-card { width: 100%; height: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; cursor: pointer; }
         .fc-card.is-flipped { transform: rotateY(180deg); }
@@ -160,7 +161,7 @@
             <div class="progress-bg">
                 <div class="progress-bar" id="load-bar"></div>
             </div>
-            <p id="load-text" style="margin-top:10px; font-size:12px;">0%</p>
+            <p id="load-text" style="margin-top:10px; font-size:12px; font-weight: bold;">0%</p>
         </div>
     </div>
 
@@ -188,7 +189,7 @@
         <div id="flash-overlay"></div>
         <div class="low-hp-vignette" id="low-hp-vignette"></div>
 
-        <!-- HANYA ADA 1 MESIN BGM, MUSTAHIL NABRAK -->
+        <!-- CUMA ADA 1 MESIN BGM MUTLAK -->
         <audio id="bgm-player" loop preload="auto"></audio>
         
         <audio id="sfx-heartbeat" src="https://assets.mixkit.co/active_storage/sfx/2578/2578-preview.mp3" loop preload="auto"></audio>
@@ -212,7 +213,7 @@
 
         <div class="scroll-area">
             <div class="app-container">
-                <div id="screen-login" class="screen active-screen glass-box" style="margin-top: auto; margin-bottom: 30px;">
+                <div id="screen-login" class="screen glass-box" style="margin-top: auto; margin-bottom: 30px;">
                     <h1>おかえり！</h1>
                     <p>siapa ni yang lagi main?</p>
                     <input type="text" id="input-nama" placeholder="ketik nama..." autocomplete="off">
@@ -228,8 +229,8 @@
                     </div>
                 </div>
 
-                <!-- BUNGKUSAN HOME BARU BIAR BELLY GOLER KAGA KECROP -->
                 <div id="screen-home" class="screen" style="position: relative;">
+                    <!-- BELLY GOLER JUMBO -->
                     <img src="belly-goler.gif" id="belly-home" onerror="this.src='icon-love.gif'">
 
                     <div class="glass-box" style="width: 100%;">
@@ -237,8 +238,9 @@
                             <h2 id="sapaan-home" style="margin-bottom: 0;"></h2>
                         </div>
                         
-                        <div id="area-upload" style="margin-bottom: 20px;">
-                            <p style="font-size: 14px; font-weight: normal; color: #ddd; margin-bottom: 10px;">*Upload file kosakata.xlsx</p>
+                        <div id="area-upload" style="margin-bottom: 20px; background: rgba(255, 50, 50, 0.3); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,50,50,0.6);">
+                            <p style="font-weight: bold; color: #ffeb3b; margin-bottom: 5px; text-shadow: none;">⚠️ DATA KOSAKATA KOSONG!</p>
+                            <p style="font-size: 12px; margin-bottom: 10px; font-weight: normal; color:#fff; text-shadow: none;">Upload manual file kosakata.xlsx di sini biar bisa milih bab:</p>
                             <input type="file" id="file-excel" accept=".xlsx, .xls">
                         </div>
                         
@@ -341,38 +343,55 @@
         let bgSiangPlayer = 'siang'; 
         let ttsJepangText = "";
 
+        let progress = 0;
+        let loadInterval;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            let loadingBar = document.getElementById('load-bar');
+            let loadingText = document.getElementById('load-text');
+            let bellyLoad = document.getElementById('belly-load');
+
+            loadInterval = setInterval(() => {
+                progress += Math.floor(Math.random() * 5) + 2; 
+                if(progress > 90) progress = 90; 
+                if(loadingBar) loadingBar.style.width = progress + '%';
+                if(loadingText) loadingText.innerText = progress + '%';
+                if(bellyLoad) bellyLoad.style.left = progress + '%';
+            }, 150); 
+        });
+
+        // BALIK PAKE URL EXCEL YANG LAMA YANG TERBUKTI AMAN
         window.onload = () => {
             let loadingBar = document.getElementById('load-bar');
             let loadingText = document.getElementById('load-text');
             let bellyLoad = document.getElementById('belly-load');
-            let progress = 0;
 
-            let interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 5) + 2; 
-                if(progress > 90) progress = 90;
-                loadingBar.style.width = progress + '%';
-                loadingText.innerText = progress + '%';
-                bellyLoad.style.left = progress + '%';
-            }, 400); 
-
-            fetch('kosakata.xlsx').then(res => { if(!res.ok) throw new Error(); return res.arrayBuffer(); })
+            fetch('kosakata.xlsx')
+            .then(res => { 
+                if(!res.ok) throw new Error(); 
+                return res.arrayBuffer(); 
+            })
             .then(data => {
                 let wb = XLSX.read(new Uint8Array(data), {type: 'array'});
-                let sheet = wb.Sheets[wb.SheetNames[0]];
-                dataVocab = XLSX.utils.sheet_to_json(sheet);
+                dataVocab = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+                
                 document.getElementById('area-upload').style.display = 'none'; 
                 renderBabList();
-                selesaiLoading(interval, loadingBar, loadingText, bellyLoad);
+                selesaiLoading(loadInterval, loadingBar, loadingText, bellyLoad);
             })
-            .catch(err => { selesaiLoading(interval, loadingBar, loadingText, bellyLoad); });
+            .catch(err => { 
+                selesaiLoading(loadInterval, loadingBar, loadingText, bellyLoad); 
+            });
         };
 
         function selesaiLoading(interval, bar, text, belly) {
             clearInterval(interval);
-            bar.style.width = '100%'; text.innerText = '100%'; belly.style.left = '100%';
+            if(bar) bar.style.width = '100%'; 
+            if(text) text.innerText = '100%'; 
+            if(belly) belly.style.left = '100%';
             
             setTimeout(() => {
-                belly.classList.add('belly-kaget');
+                if(belly) belly.classList.add('belly-load-kaget');
                 setTimeout(() => {
                     document.getElementById('loading-screen').style.opacity = '0';
                     setTimeout(() => {
@@ -459,6 +478,30 @@
             let bub = document.getElementById(`bubble-${posisi}`);
             bub.innerText = teks; bub.classList.add('bubble-show');
             setTimeout(() => { bub.classList.remove('bubble-show'); }, 2000);
+        }
+
+        document.getElementById('file-excel').addEventListener('change', (e) => {
+            try {
+                let reader = new FileReader(); reader.readAsArrayBuffer(e.target.files[0]);
+                reader.onload = (e) => {
+                    try {
+                        let wb = XLSX.read(new Uint8Array(reader.result), {type: 'array'});
+                        dataVocab = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+                        document.getElementById('area-upload').style.display = 'none';
+                        renderBabList();
+                    } catch(err) {
+                        alert("Waduh, file excelnya error/corrupt boss. Coba cek lagi isinya.");
+                    }
+                };
+            } catch (err) { console.log(err); }
+        });
+
+        function renderBabList() {
+            let babs = [...new Set(dataVocab.map(item => item.bab))].sort((a,b)=>a-b);
+            let htmlBab = '';
+            babs.forEach(b => { htmlBab += `<label><input type="checkbox" class="cek-bab" value="${b}"> bab ${b}</label>`; });
+            document.getElementById('daftar-bab').innerHTML = htmlBab;
+            document.getElementById('setup-bab').style.display = 'block';
         }
 
         function prosesNama() {
