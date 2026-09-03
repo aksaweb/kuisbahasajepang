@@ -40,7 +40,8 @@
         .btn-minimal { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer; backdrop-filter: blur(4px); transition: all 0.3s ease; pointer-events: auto; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .btn-minimal:hover { background: rgba(255,255,255,0.6); color: #fff; transform: translateY(-2px); border-color: rgba(255,255,255,0.5); }
 
-        .glass-box { position: relative; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); transform: translateZ(0); overflow: hidden; }
+        /* BUG GLASSMORPH BEKU FIX: DIBUANG translateZ(0)-NYA */
+        .glass-box { position: relative; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); overflow: hidden; }
         .glass-box::after { content: ""; position: absolute; top: -50%; left: -100%; width: 50%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%); transform: skewX(-20deg); animation: lightSweep 6s infinite; pointer-events: none; }
         @keyframes lightSweep { 0% { left: -100%; } 20%, 100% { left: 200%; } }
 
@@ -100,17 +101,19 @@
         .bab-list label:hover { background: rgba(255,255,255,0.2); }
         .bab-list input { margin-right: 5px; }
 
-        /* PERBAIKAN RESULT UI: TENGAH BOLONG & KAGA KETUKER URUTANNYA */
-        .glass-result { display: flex; flex-direction: column; height: 100%; padding: 40px 15px; background: transparent; border: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
-        .result-header { text-align: center; width: 100%; margin-top: 10px; }
-        .result-spacer { flex-grow: 1; } /* SULAP CSS: Dorong Header ke atap, Body ke lantai. Tengah Auto Plong */
-        .result-body { width: 100%; max-height: 40vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; }
-        .result-btn-wrap { width: 100%; margin-bottom: 10px; }
+        /* PERBAIKAN RESULT UI: TITLE DI ATAS BGT, REVIEW MENTOK BAWAH BGT */
+        .glass-result { display: flex; flex-direction: column; height: 100%; padding: 25px 15px 15px 15px; background: transparent; border: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+        .result-header { width: 100%; text-align: center; margin-top: 10px; }
+        .result-spacer { flex-grow: 1; }
+        .result-footer { width: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
+        .result-body { width: 100%; max-height: 45vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; margin-top: 10px; }
+        .result-btn-wrap { width: 100%; display: flex; justify-content: center; }
         
-        #result-title { font-size: 22px; margin-bottom: 5px; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
-        #skor-akhir { font-size: 18px; margin-bottom: 0; color: #ffeb3b; }
+        #result-title { font-size: 22px; margin-bottom: 0; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
+        #skor-akhir { font-size: 18px; margin-bottom: 0; color: #ffeb3b; text-align: center; }
         
-        .review-box { background: rgba(0,0,0,0.4); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); transform: translateZ(0); }
+        /* BUG GLASSMORPH BEKU FIX: DIBUANG translateZ(0)-NYA */
+        .review-box { background: rgba(0,0,0,0.4); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); }
         .benar-text { color: #00e676; font-weight: bold;}
         .salah-text { color: #ff1744; font-weight: bold;}
 
@@ -123,13 +126,15 @@
         .belly-load-kaget { animation: bellyJatohLoad 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
         @keyframes bellyJatohLoad { 0% { transform: translateX(-50%) translateY(-20px) scale(1.1); } 100% { transform: translateX(-50%) translateY(120vh) scale(1); opacity: 0; } }
 
+        /* BELLY HOME JUMBO DI KANAN */
         #belly-home { position: absolute; top: -75px; right: 15px; width: 150px; z-index: 10; pointer-events: none; }
         .belly-kaget { animation: bellyJatohHome 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
         @keyframes bellyJatohHome { 0% { transform: translateY(-20px) scale(1.1); } 100% { transform: translateY(120vh) scale(1); opacity: 0; } }
 
-        .top-bar-custom { position: absolute; top: 15px; right: 15px; display: flex; align-items: center; gap: 10px; z-index: 50; }
+        /* VINYL DIPINDAH KE KIRI BIAR KAGA NABRAK BELLY */
+        .top-bar-custom { position: absolute; top: 15px; left: 15px; display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; z-index: 50; }
         .vinyl-text { font-family: 'VT323', monospace; font-size: 16px; color: #ffeb3b; white-space: nowrap; overflow: hidden; max-width: 0; opacity: 0; transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1); text-shadow: 1px 1px 0px rgba(0,0,0,0.8); }
-        .vinyl-text.show { max-width: 150px; opacity: 1; margin-right: 5px; }
+        .vinyl-text.show { max-width: 150px; opacity: 1; margin-left: 5px; }
         .vinyl-btn { position: relative; width: 40px; height: 40px; cursor: pointer; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .vinyl-disc { width: 100%; height: 100%; object-fit: contain; transition: 0.3s; }
         .spin { animation: muter 3s linear infinite; }
@@ -214,16 +219,14 @@
 
         <div class="scroll-area">
             <div class="app-container">
-                <!-- LOGIN SCREEN (SUDAH DI TENGAN NORMAL) -->
-                <div id="screen-login" class="screen glass-box">
+                <div id="screen-login" class="screen glass-box" style="margin-top: auto; margin-bottom: 30px;">
                     <h1>おかえり！</h1>
                     <p>siapa ni yang lagi main?</p>
                     <input type="text" id="input-nama" placeholder="ketik nama..." autocomplete="off">
                     <button class="btn" onclick="prosesNama()">lanjut >></button>
                 </div>
 
-                <!-- LO-FI SCREEN (SUDAH DI TENGAH NORMAL) -->
-                <div id="screen-lofi" class="screen glass-box">
+                <div id="screen-lofi" class="screen glass-box" style="margin-top: auto; margin-bottom: 30px;">
                     <h3>Satu lagi...</h3>
                     <p style="font-size: 14px;">Mau pake lagu Lo-Fi buat nemenin belajarnya?</p>
                     <div style="display:flex; gap:15px; margin-top:20px;">
@@ -313,21 +316,22 @@
                     </div>
                 </div>
 
-                <!-- SCREEN RESULT DENGAN SPACER (ANTI KETUKER & TENGAH PLONG) -->
+                <!-- STRUKTUR RESULT BARU: TENGAH PLONG, URUTAN BENAR -->
                 <div id="screen-result" class="screen glass-result">
                     <div class="result-header">
                         <h1 id="result-title"></h1>
-                        <h2 id="skor-akhir"></h2>
                     </div>
                     
-                    <!-- KOTAK INI YANG BIKIN TENGAHNYA PLONG -->
                     <div class="result-spacer"></div>
                     
-                    <div class="result-body">
-                        <div id="review-salah"></div>
-                    </div>
-                    <div class="result-btn-wrap">
-                        <button class="btn" onclick="kembaliHome()">🏠 home </button>
+                    <div class="result-footer">
+                        <h2 id="skor-akhir"></h2>
+                        <div class="result-body">
+                            <div id="review-salah"></div>
+                        </div>
+                        <div class="result-btn-wrap">
+                            <button class="btn" onclick="kembaliHome()">🏠 home </button>
+                        </div>
                     </div>
                 </div>
             </div>
