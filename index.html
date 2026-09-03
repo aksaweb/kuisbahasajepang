@@ -40,27 +40,28 @@
         .btn-minimal { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; pointer-events: auto; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 1; position: relative;}
         .btn-minimal:hover { background: rgba(255,255,255,0.6); color: #fff; transform: translateY(-2px); border-color: rgba(255,255,255,0.5); }
 
-        /* HACK ANTI FREEZE SAFARI iOS - Bikin GPU dipaksa kerja ngerender background */
-        @keyframes iosRepaint {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.0001); } 
-        }
+        @keyframes iosRepaint { 0% { transform: scale(1); } 100% { transform: scale(1.0001); } }
 
-        .glass-box { position: relative; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate; }
+        .glass-box { position: relative; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate; }
+        .glass-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: -1; border-radius: 20px;}
         .glass-box::after { content: ""; position: absolute; top: -50%; left: -100%; width: 50%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%); transform: skewX(-20deg); animation: lightSweep 6s infinite; pointer-events: none; z-index: 0; }
         @keyframes lightSweep { 0% { left: -100%; } 20%, 100% { left: 200%; } }
 
-        #question-box { position: relative; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 1; transform: scale(1) translateY(0); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
+        #question-box { position: relative; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 1; transform: scale(1) translateY(0); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
+        #question-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 20px; z-index: -1; }
         
-        .review-box { position: relative; background: rgba(0,0,0,0.4); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
+        .review-box { position: relative; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
+        .review-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 10px; z-index: -1; }
         
         h1, h2, h3 { text-align: center; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); position: relative; z-index: 2;}
         p { text-align: center; margin-bottom: 15px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); position: relative; z-index: 2;}
 
-        input[type="text"] { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3); outline: none; background: rgba(255, 255, 255, 0.1); color: #fff; font-weight: bold; margin-bottom: 15px; text-align: center; transition: 0.3s; position: relative; z-index: 1; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);}
+        input[type="text"] { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3); outline: none; background: rgba(255, 255, 255, 0.1); color: #fff; font-weight: bold; margin-bottom: 15px; text-align: center; transition: 0.3s; position: relative; z-index: 1;}
+        input[type="text"]::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; z-index: -1; }
         input[type="text"]:focus { background: rgba(255,255,255,0.25); }
 
-        .btn { display: block; width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255, 255, 255, 0.1); color: white; font-size: 18px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: all 0.2s; margin-bottom: 10px; position: relative; z-index: 1; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);}
+        .btn { display: block; width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255, 255, 255, 0.1); color: white; font-size: 18px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: all 0.2s; margin-bottom: 10px; position: relative; z-index: 1;}
+        .btn::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; z-index: -1; }
         .btn:hover, .btn:active { background: rgba(255, 255, 255, 0.25); transform: scale(0.97); }
 
         .furigana-toggle { display: flex; justify-content: flex-end; align-items: center; gap: 10px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); margin-bottom: 5px; position: relative; z-index: 2;}
@@ -71,7 +72,8 @@
         input:checked + .slider { background-color: rgba(255,255,255,0.5); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        .opsi-btn { display: block; width: 100%; padding: 12px 15px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255,255,255,0.4); border-radius: 12px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s; text-align: left; box-shadow: 0 4px 6px rgba(0,0,0,0.2); text-shadow: 1px 1px 3px rgba(0,0,0,0.7); position: relative; z-index: 1; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px);}
+        .opsi-btn { display: block; width: 100%; padding: 12px 15px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255,255,255,0.4); border-radius: 12px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s; text-align: left; box-shadow: 0 4px 6px rgba(0,0,0,0.2); text-shadow: 1px 1px 3px rgba(0,0,0,0.7); position: relative; z-index: 1;}
+        .opsi-btn::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 12px; z-index: -1; }
         .opsi-btn:hover, .opsi-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.98); }
 
         ruby { font-size: 28px; font-weight: 900; color: #ffeb3b; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
@@ -108,7 +110,7 @@
         .bab-list label:hover { background: rgba(255,255,255,0.2); }
         .bab-list input { margin-right: 5px; }
 
-        /* PERBAIKAN RESULT UI MUTLAK: TENGAH PLONG, ATAS MENTOK, BAWAH MENTOK */
+        /* PERBAIKAN RESULT UI MUTLAK */
         #screen-result { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-top: 20px; padding-bottom: 20px; height: 100%; width: 100%; }
         .result-header { width: 100%; text-align: center; margin-top: 0; margin-bottom: auto; }
         .result-footer { width: 100%; display: flex; flex-direction: column; justify-content: flex-end; margin-top: auto; margin-bottom: 0; }
@@ -146,15 +148,22 @@
         .vinyl-cross { position: absolute; top: 50%; left: 50%; width: 100%; height: 3px; background: #ff1744; transform: translate(-50%, -50%) rotate(45deg); display: none; box-shadow: 0 0 5px rgba(0,0,0,0.8); }
         
         .btn-tts { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; border-radius: 50%; width: 35px; height: 35px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 2; position: relative;}
+        .btn-tts::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 50%; z-index: -1; }
         .btn-tts:active { transform: scale(0.9); }
 
-        .fc-scene { width: 100%; height: 250px; perspective: 1000px; margin-bottom: 20px; position: relative; z-index: 2;}
+        /* PERBAIKAN FLASHCARD 3D: KACA STATIS DI BELAKANG (ANTI HILANG/FREEZE) */
+        .fc-wrapper { position: relative; width: 100%; height: 250px; margin-bottom: 20px; }
+        .fc-glass-bg { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1; animation: iosRepaint 0.5s infinite alternate; overflow: hidden; }
+        .fc-glass-bg::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 20px; z-index: -1; }
+        
+        .fc-scene { position: relative; width: 100%; height: 100%; perspective: 1000px; z-index: 2; }
         .fc-card { width: 100%; height: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; cursor: pointer; }
         .fc-card.is-flipped { transform: rotateY(180deg); }
         
-        .fc-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 20px; text-align: center; z-index: 1; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); animation: iosRepaint 0.5s infinite alternate;}
+        .fc-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; border-radius: 20px; }
+        .fc-front { background: transparent; }
+        .fc-back { background: transparent; transform: rotateY(180deg); }
         
-        .fc-back { transform: rotateY(180deg); background: rgba(255, 255, 255, 0.15); border-color: rgba(255,255,255,0.5); }
         .fc-btn-row { display: flex; justify-content: center; gap: 20px; margin-top: 10px; opacity: 0; pointer-events: none; transition: 0.3s; position: relative; z-index: 2;}
         .fc-btn-row.show { opacity: 1; pointer-events: auto; }
         .fc-btn { width: 60px; height: 60px; border-radius: 50%; font-size: 24px; display: flex; justify-content: center; align-items: center; cursor: pointer; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.4); transition: 0.2s; }
@@ -225,7 +234,6 @@
 
         <div class="scroll-area">
             <div class="app-container">
-                <!-- LOGIN UDAH MURNI DITENGAH PAKE MARGIN AUTO -->
                 <div id="screen-login" class="screen glass-box" style="margin: auto;">
                     <h1>おかえり！</h1>
                     <p>siapa ni yang lagi main?</p>
@@ -233,7 +241,6 @@
                     <button class="btn" onclick="prosesNama()">lanjut >></button>
                 </div>
 
-                <!-- LO-FI UDAH MURNI DITENGAH PAKE MARGIN AUTO -->
                 <div id="screen-lofi" class="screen glass-box" style="margin: auto;">
                     <h3>Satu lagi...</h3>
                     <p style="font-size: 14px;">Mau pake lagu Lo-Fi buat nemenin belajarnya?</p>
@@ -244,7 +251,6 @@
                 </div>
 
                 <div id="screen-home" class="screen" style="position: relative; margin-top: 50px;">
-                    <!-- BELLY PINDAH KE KIRI -->
                     <img src="belly-goler.gif" id="belly-home" onerror="this.src='icon-love.gif'">
 
                     <div class="glass-box" style="width: 100%;">
@@ -270,7 +276,7 @@
                                 </label>
                             </div>
                             
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; position: relative; z-index: 2;">
                                 <button class="btn" style="margin-bottom:0; font-size:14px; background: rgba(255, 235, 59, 0.2); border-color:#ffeb3b;" onclick="triggerBellyStart('flashcard')">Flashcard 🎴</button>
                                 <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="triggerBellyStart('quiz')">Santai ☕</button>
                                 <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="triggerBellyStart('sprint')">Tarik Tambang 🪢</button>
@@ -281,23 +287,34 @@
                 </div>
 
                 <div id="screen-flashcard" class="screen">
-                    <div class="fc-counter" id="fc-sisa">sisa: 0 kartu</div>
-                    <div class="fc-scene">
-                        <div class="fc-card" id="fc-card" onclick="flipCard()">
-                            <div class="fc-face" id="fc-front">
-                                <button class="btn-tts" onclick="speakText(event, 'front')" id="tts-front">🔊</button>
-                                <div id="fc-tanya" style="text-align:center;"></div>
-                                <p style="font-size:12px; margin-top:20px; color:#aaa; font-weight:normal;">(tap kartu buat balik)</p>
-                            </div>
-                            <div class="fc-face fc-back" id="fc-back">
-                                <button class="btn-tts" onclick="speakText(event, 'back')" id="tts-back" style="display:none;">🔊</button>
-                                <div id="fc-jawab" style="text-align:center;"></div>
+                    <!-- FLASHCARD DIBUNGKUS KE TENGAH MURNI -->
+                    <div style="margin: auto; width: 100%;">
+                        <div class="fc-counter" id="fc-sisa">sisa: 0 kartu</div>
+                        
+                        <div class="fc-wrapper">
+                            <!-- Kaca Estetik diem di belakang -->
+                            <div class="fc-glass-bg"></div>
+                            
+                            <!-- Kartu yang bolak balik di depan -->
+                            <div class="fc-scene">
+                                <div class="fc-card" id="fc-card" onclick="flipCard()">
+                                    <div class="fc-face fc-front" id="fc-front">
+                                        <button class="btn-tts" onclick="speakText(event, 'front')" id="tts-front">🔊</button>
+                                        <div id="fc-tanya" style="text-align:center; position: relative; z-index: 2;"></div>
+                                        <p style="font-size:12px; margin-top:20px; color:#aaa; font-weight:normal;">(tap kartu buat balik)</p>
+                                    </div>
+                                    <div class="fc-face fc-back" id="fc-back">
+                                        <button class="btn-tts" onclick="speakText(event, 'back')" id="tts-back" style="display:none;">🔊</button>
+                                        <div id="fc-jawab" style="text-align:center; position: relative; z-index: 2;"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="fc-btn-row" id="fc-action">
-                        <button class="fc-btn fc-btn-salah" onclick="nilaiFlashcard(false)">❌</button>
-                        <button class="fc-btn fc-btn-bener" onclick="nilaiFlashcard(true)">⭕</button>
+
+                        <div class="fc-btn-row" id="fc-action">
+                            <button class="fc-btn fc-btn-salah" onclick="nilaiFlashcard(false)">❌</button>
+                            <button class="fc-btn fc-btn-bener" onclick="nilaiFlashcard(true)">⭕</button>
+                        </div>
                     </div>
                 </div>
 
@@ -318,14 +335,13 @@
 
                     <div id="question-box">
                         <h3 id="progress-soal">soal 1 / 10</h3>
-                        <div style="display:flex; justify-content:center; align-items:center; flex-direction:column; margin-bottom: 20px;">
+                        <div style="display:flex; justify-content:center; align-items:center; flex-direction:column; margin-bottom: 20px; position: relative; z-index: 2;">
                             <div id="tempat-soal" style="text-align: center;"></div>
                         </div>
-                        <div id="tempat-opsi"></div>
+                        <div id="tempat-opsi" style="position: relative; z-index: 2;"></div>
                     </div>
                 </div>
 
-                <!-- RESULT UI SUDAH MURNI TENGAHNYA PLONG (Pake Flex Grow 1) -->
                 <div id="screen-result" class="screen">
                     <div class="result-header">
                         <h1 id="result-title"></h1>
@@ -616,6 +632,7 @@
             pindahScreen('screen-play'); tampilSoal();
         }
 
+        // PERBAIKAN LOGIKA TEXT FLASHCARD
         function tampilFlashcard() {
             if(flashcards.length === 0) {
                 alert("Semua kartu udah hafal bossku! Balik home ya.");
@@ -631,10 +648,16 @@
             let data = flashcards[fcIndex];
             let pakeFurigana = document.getElementById('toggle-furigana').checked;
             
-            let frontHTML = `<p style="font-size:36px; font-weight:900; color:#ffeb3b; text-shadow:2px 2px 4px rgba(0,0,0,0.8); margin:0;">${data.kanji}</p>`;
-            if(pakeFurigana && data.cara_baca) frontHTML = `<ruby style="font-size:36px;">${data.kanji}<rt style="font-size:16px;">${data.cara_baca}</rt></ruby>`;
+            // KANJI MURNI DI DEPAN
+            let frontHTML = `<p style="font-size:42px; font-weight:900; color:#ffeb3b; text-shadow:2px 2px 5px rgba(0,0,0,0.9); margin:0;">${data.kanji}</p>`;
             document.getElementById('fc-tanya').innerHTML = frontHTML;
-            document.getElementById('fc-jawab').innerHTML = `<p style="font-size:24px; font-weight:bold; margin:0;">${data.arti}</p>`;
+            
+            // ARTI + CARA BACA DI BELAKANG
+            let backHTML = `<p style="font-size:24px; font-weight:bold; margin-bottom: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.9);">${data.arti}</p>`;
+            if(pakeFurigana && data.cara_baca) {
+                backHTML += `<p style="font-size:18px; font-weight:normal; color:#e0e0e0; margin:0; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">(${data.cara_baca})</p>`;
+            }
+            document.getElementById('fc-jawab').innerHTML = backHTML;
             
             ttsJepangText = data.cara_baca ? data.cara_baca : data.kanji; 
             
