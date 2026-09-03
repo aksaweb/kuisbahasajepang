@@ -69,7 +69,6 @@
         ruby { font-size: 28px; font-weight: 900; color: #ffeb3b; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
         rt { font-size: 14px; color: #fff; }
 
-        /* GAME UI HEIGHT DITURUNIN BIAR KAGA KEPOTONG LANGIT-LANGIT */
         #game-ui { margin-top: 70px; margin-bottom: 25px; padding: 0 25px; position: relative; } 
         .bar-container { width: 100%; height: 28px; background: rgba(0,0,0,0.5); border-radius: 15px; position: relative; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .midpoint { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.2); z-index: 1; }
@@ -101,10 +100,15 @@
         .bab-list label:hover { background: rgba(255,255,255,0.2); }
         .bab-list input { margin-right: 5px; }
 
-        #screen-result { height: 100%; position: relative; padding: 0; justify-content: flex-start; }
-        .result-header { position: absolute; top: 10vh; left: 0; width: 100%; text-align: center; }
-        .result-body { position: absolute; bottom: 12vh; left: 5%; width: 90%; max-height: 40vh; overflow-y: auto; padding-right: 5px; }
-        .result-btn-wrap { position: absolute; bottom: 3vh; left: 5%; width: 90%; display: flex; justify-content: center;}
+        /* PERBAIKAN RESULT UI: TENGAH BOLONG & KAGA KETUKER URUTANNYA */
+        .glass-result { display: flex; flex-direction: column; height: 100%; padding: 40px 15px; background: transparent; border: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+        .result-header { text-align: center; width: 100%; margin-top: 10px; }
+        .result-spacer { flex-grow: 1; } /* SULAP CSS: Dorong Header ke atap, Body ke lantai. Tengah Auto Plong */
+        .result-body { width: 100%; max-height: 40vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; }
+        .result-btn-wrap { width: 100%; margin-bottom: 10px; }
+        
+        #result-title { font-size: 22px; margin-bottom: 5px; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
+        #skor-akhir { font-size: 18px; margin-bottom: 0; color: #ffeb3b; }
         
         .review-box { background: rgba(0,0,0,0.4); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); transform: translateZ(0); }
         .benar-text { color: #00e676; font-weight: bold;}
@@ -210,14 +214,16 @@
 
         <div class="scroll-area">
             <div class="app-container">
-                <div id="screen-login" class="screen glass-box" style="margin-top: auto; margin-bottom: 30px;">
+                <!-- LOGIN SCREEN (SUDAH DI TENGAN NORMAL) -->
+                <div id="screen-login" class="screen glass-box">
                     <h1>おかえり！</h1>
                     <p>siapa ni yang lagi main?</p>
                     <input type="text" id="input-nama" placeholder="ketik nama..." autocomplete="off">
                     <button class="btn" onclick="prosesNama()">lanjut >></button>
                 </div>
 
-                <div id="screen-lofi" class="screen glass-box" style="margin-top: auto; margin-bottom: 30px;">
+                <!-- LO-FI SCREEN (SUDAH DI TENGAH NORMAL) -->
+                <div id="screen-lofi" class="screen glass-box">
                     <h3>Satu lagi...</h3>
                     <p style="font-size: 14px;">Mau pake lagu Lo-Fi buat nemenin belajarnya?</p>
                     <div style="display:flex; gap:15px; margin-top:20px;">
@@ -226,7 +232,6 @@
                     </div>
                 </div>
 
-                <!-- KOTAK HOME UDAH DITURUNIN BIAR KAGA NYUNDUL VINYL -->
                 <div id="screen-home" class="screen" style="position: relative; margin-top: 50px;">
                     <img src="belly-goler.gif" id="belly-home" onerror="this.src='icon-love.gif'">
 
@@ -308,11 +313,16 @@
                     </div>
                 </div>
 
+                <!-- SCREEN RESULT DENGAN SPACER (ANTI KETUKER & TENGAH PLONG) -->
                 <div id="screen-result" class="screen glass-result">
                     <div class="result-header">
                         <h1 id="result-title"></h1>
                         <h2 id="skor-akhir"></h2>
                     </div>
+                    
+                    <!-- KOTAK INI YANG BIKIN TENGAHNYA PLONG -->
+                    <div class="result-spacer"></div>
+                    
                     <div class="result-body">
                         <div id="review-salah"></div>
                     </div>
