@@ -40,12 +40,12 @@
         .btn-minimal { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer; backdrop-filter: blur(4px); transition: all 0.3s ease; pointer-events: auto; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .btn-minimal:hover { background: rgba(255,255,255,0.6); color: #fff; transform: translateY(-2px); border-color: rgba(255,255,255,0.5); }
 
-        /* BUG GLASSMORPH BEKU FIX: DIBUANG translateZ(0)-NYA */
         .glass-box { position: relative; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); overflow: hidden; }
         .glass-box::after { content: ""; position: absolute; top: -50%; left: -100%; width: 50%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%); transform: skewX(-20deg); animation: lightSweep 6s infinite; pointer-events: none; }
         @keyframes lightSweep { 0% { left: -100%; } 20%, 100% { left: 200%; } }
 
-        #question-box { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 1; transform: scale(1) translateY(0); will-change: transform, opacity; overflow: hidden; position: relative; }
+        /* BUG GLASSMORPH BEKU SOAL FIX: will-change DIHAPUS BIAR SAFARI KAGA NGE-SNAPSHOT */
+        #question-box { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 1; transform: scale(1) translateY(0); overflow: hidden; position: relative; }
         
         h1, h2, h3 { text-align: center; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
         p { text-align: center; margin-bottom: 15px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); }
@@ -101,7 +101,6 @@
         .bab-list label:hover { background: rgba(255,255,255,0.2); }
         .bab-list input { margin-right: 5px; }
 
-        /* PERBAIKAN RESULT UI: TITLE DI ATAS BGT, REVIEW MENTOK BAWAH BGT */
         .glass-result { display: flex; flex-direction: column; height: 100%; padding: 25px 15px 15px 15px; background: transparent; border: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
         .result-header { width: 100%; text-align: center; margin-top: 10px; }
         .result-spacer { flex-grow: 1; }
@@ -112,7 +111,7 @@
         #result-title { font-size: 22px; margin-bottom: 0; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
         #skor-akhir { font-size: 18px; margin-bottom: 0; color: #ffeb3b; text-align: center; }
         
-        /* BUG GLASSMORPH BEKU FIX: DIBUANG translateZ(0)-NYA */
+        /* BUG GLASSMORPH BEKU REVIEW FIX: translateZ(0) UDAH MUSNAH MUTLAK */
         .review-box { background: rgba(0,0,0,0.4); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); }
         .benar-text { color: #00e676; font-weight: bold;}
         .salah-text { color: #ff1744; font-weight: bold;}
@@ -126,12 +125,10 @@
         .belly-load-kaget { animation: bellyJatohLoad 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
         @keyframes bellyJatohLoad { 0% { transform: translateX(-50%) translateY(-20px) scale(1.1); } 100% { transform: translateX(-50%) translateY(120vh) scale(1); opacity: 0; } }
 
-        /* BELLY HOME JUMBO DI KANAN */
         #belly-home { position: absolute; top: -75px; right: 15px; width: 150px; z-index: 10; pointer-events: none; }
         .belly-kaget { animation: bellyJatohHome 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
         @keyframes bellyJatohHome { 0% { transform: translateY(-20px) scale(1.1); } 100% { transform: translateY(120vh) scale(1); opacity: 0; } }
 
-        /* VINYL DIPINDAH KE KIRI BIAR KAGA NABRAK BELLY */
         .top-bar-custom { position: absolute; top: 15px; left: 15px; display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; z-index: 50; }
         .vinyl-text { font-family: 'VT323', monospace; font-size: 16px; color: #ffeb3b; white-space: nowrap; overflow: hidden; max-width: 0; opacity: 0; transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1); text-shadow: 1px 1px 0px rgba(0,0,0,0.8); }
         .vinyl-text.show { max-width: 150px; opacity: 1; margin-left: 5px; }
@@ -316,7 +313,6 @@
                     </div>
                 </div>
 
-                <!-- STRUKTUR RESULT BARU: TENGAH PLONG, URUTAN BENAR -->
                 <div id="screen-result" class="screen glass-result">
                     <div class="result-header">
                         <h1 id="result-title"></h1>
