@@ -35,20 +35,23 @@
         .scroll-area::-webkit-scrollbar { display: none; }
 
         .app-container { width: 100%; max-width: 480px; padding: 20px; display: flex; flex-direction: column; gap: 15px; margin: 0 auto; min-height: 100%; justify-content: center; }
-        .bottom-controls { position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; z-index: 50; pointer-events: none; }
+        .bottom-controls { position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; z-index: 50; pointer-events: auto; }
         
-        .btn-minimal { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; pointer-events: auto; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 1; position: relative;}
+        .btn-minimal { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 1; position: relative;}
         .btn-minimal:hover { background: rgba(255,255,255,0.6); color: #fff; transform: translateY(-2px); border-color: rgba(255,255,255,0.5); }
 
         @keyframes iosRepaint { 0% { transform: scale(1); } 100% { transform: scale(1.0001); } }
 
         .glass-box { position: relative; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate; }
+        .glass-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: -1; border-radius: 20px;}
         .glass-box::after { content: ""; position: absolute; top: -50%; left: -100%; width: 50%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%); transform: skewX(-20deg); animation: lightSweep 6s infinite; pointer-events: none; z-index: 0; }
         @keyframes lightSweep { 0% { left: -100%; } 20%, 100% { left: 200%; } }
 
         #question-box { position: relative; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 1; transform: scale(1) translateY(0); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
+        #question-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 20px; z-index: -1; }
         
         .review-box { position: relative; background: rgba(0,0,0,0.4); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
+        .review-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 10px; z-index: -1; }
         
         h1, h2, h3 { text-align: center; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); position: relative; z-index: 2;}
         p { text-align: center; margin-bottom: 15px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); position: relative; z-index: 2;}
@@ -99,10 +102,12 @@
         .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
         .active-screen { display: flex; flex-direction: column; justify-content: center; opacity: 1; transform: scale(1) translateY(0); }
         
-        .bab-list { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 10px; position: relative; z-index: 2;}
-        .bab-list label { background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); transition: 0.2s;}
-        .bab-list label:hover { background: rgba(255,255,255,0.2); }
-        .bab-list input { margin-right: 5px; }
+        /* SCROLL HORIZONTAL KHUSUS PILIH BAB (ELEGAN & CLEAN) */
+        .bab-scroll-container { display: flex; overflow-x: auto; gap: 10px; padding: 10px 5px; margin-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; position: relative; z-index: 2; width: 100%; }
+        .bab-scroll-container::-webkit-scrollbar { display: none; }
+        .bab-scroll-container label { flex: 0 0 auto; background: rgba(0,0,0,0.3); padding: 10px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); transition: 0.2s;}
+        .bab-scroll-container label:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+        .bab-scroll-container input { margin-right: 5px; }
 
         #screen-result { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-top: 20px; padding-bottom: 20px; height: 100%; width: 100%; }
         .result-header { width: 100%; text-align: center; margin-top: 0; margin-bottom: auto; }
@@ -125,13 +130,17 @@
         .belly-load-kaget { animation: bellyJatohLoad 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
         @keyframes bellyJatohLoad { 0% { transform: translateX(-50%) translateY(-20px) scale(1.1); } 100% { transform: translateX(-50%) translateY(120vh) scale(1); opacity: 0; } }
 
-        #belly-home { position: absolute; top: -75px; left: -20px; width: 150px; z-index: 10; pointer-events: none; }
-        .belly-kaget { animation: bellyJatohHome 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
-        @keyframes bellyJatohHome { 0% { transform: translateY(-20px) scale(1.1); } 100% { transform: translateY(120vh) scale(1); opacity: 0; } }
+        /* BELLY HOME DI KANAN BALIK NORMAL (VINYL DI KIRI) */
+        #belly-home { position: absolute; top: -75px; right: 0px; width: 150px; z-index: 10; pointer-events: none; }
+        
+        /* BELLY START NANGKRING DI ATAS TOMBOL KUIS */
+        #belly-start { position: absolute; top: -50px; left: 50%; transform: translateX(-50%); width: 80px; z-index: 10; pointer-events: none; }
+        .belly-start-kaget { animation: bellyJatohStart 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
+        @keyframes bellyJatohStart { 0% { transform: translateX(-50%) translateY(0) scale(1.1); } 100% { transform: translateX(-50%) translateY(120vh) scale(1); opacity: 0; } }
 
-        .top-bar-custom { position: absolute; top: 15px; right: 15px; display: flex; align-items: center; gap: 10px; z-index: 50; }
+        .top-bar-custom { position: absolute; top: 15px; left: 15px; display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; z-index: 50; }
         .vinyl-text { font-family: 'VT323', monospace; font-size: 16px; color: #ffeb3b; white-space: nowrap; overflow: hidden; max-width: 0; opacity: 0; transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1); text-shadow: 1px 1px 0px rgba(0,0,0,0.8); }
-        .vinyl-text.show { max-width: 150px; opacity: 1; margin-right: 5px; }
+        .vinyl-text.show { max-width: 150px; opacity: 1; margin-left: 5px; }
         .vinyl-btn { position: relative; width: 40px; height: 40px; cursor: pointer; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .vinyl-disc { width: 100%; height: 100%; object-fit: contain; transition: 0.3s; }
         .spin { animation: muter 3s linear infinite; }
@@ -139,18 +148,23 @@
         .vinyl-cross { position: absolute; top: 50%; left: 50%; width: 100%; height: 3px; background: #ff1744; transform: translate(-50%, -50%) rotate(45deg); display: none; box-shadow: 0 0 5px rgba(0,0,0,0.8); }
         
         .btn-tts { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; border-radius: 50%; width: 35px; height: 35px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 2; position: relative;}
+        .btn-tts::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 50%; z-index: -1; }
         .btn-tts:active { transform: scale(0.9); }
 
-        /* PERBAIKAN FLASHCARD: KACA TERANG, BLUR TIPIS, TOMBOL ESTETIK, ANTI TEMBUS IOS */
-        .fc-wrapper { position: relative; width: 100%; height: 250px; margin-bottom: 20px; }
-        .fc-glass-bg { position: absolute; inset: 0; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.4); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 1; animation: iosRepaint 0.5s infinite alternate; overflow: hidden; }
-        .fc-glass-bg::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 20px; z-index: -1; }
+        /* FLASHCARD ILUSI OPTIK 3D (HACK SAFARI IOS) */
+        .fc-wrapper { position: relative; width: 260px; height: 360px; margin-bottom: 20px; }
+        
+        /* ENGSEL ILUSI KACA (Biar Kaca Keliatan Balik Tapi Kaga Error di iOS) */
+        #fc-glass-flipper { position: absolute; inset: 0; z-index: 1; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-origin: center; }
+        #fc-glass-flipper.is-flipped { transform: scaleX(-1); }
+
+        .fc-glass-bg { position: absolute; inset: 0; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.4); border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 20px rgba(255,255,255,0.15); animation: iosRepaint 0.5s infinite alternate; overflow: hidden; }
+        .fc-glass-bg::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); border-radius: 20px; z-index: -1; }
         
         .fc-scene { position: relative; width: 100%; height: 100%; perspective: 1000px; z-index: 2; }
         .fc-card { width: 100%; height: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; cursor: pointer; }
         .fc-card.is-flipped { transform: rotateY(180deg); }
         
-        /* FIX iOS Tembus Pandang: Opacity swap di detik flip-nya */
         .fc-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; border-radius: 20px; transition: opacity 0.2s ease, visibility 0.2s ease; }
         .fc-front { background: transparent; opacity: 1; visibility: visible; transform: rotateY(0deg); }
         .fc-back { background: transparent; transform: rotateY(180deg); opacity: 0; visibility: hidden; }
@@ -158,15 +172,15 @@
         .fc-card.is-flipped .fc-front { opacity: 0; visibility: hidden; }
         .fc-card.is-flipped .fc-back { opacity: 1; visibility: visible; }
         
-        .fc-btn-row { display: flex; justify-content: center; gap: 20px; margin-top: 10px; opacity: 0; pointer-events: none; transition: 0.3s; position: relative; z-index: 2;}
+        .fc-btn-row { display: flex; justify-content: center; gap: 20px; margin-top: 15px; opacity: 0; pointer-events: none; transition: 0.3s; position: relative; z-index: 2;}
         .fc-btn-row.show { opacity: 1; pointer-events: auto; }
         
-        /* Tombol Glassmorphism Transparan */
-        .fc-btn { width: 60px; height: 60px; border-radius: 50%; font-size: 24px; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.3); background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: 0.2s; font-weight: 900; }
-        .fc-btn-salah { color: #ff1744; text-shadow: 0 0 10px rgba(255, 23, 68, 0.6); }
-        .fc-btn-bener { color: #00e676; text-shadow: 0 0 10px rgba(0, 230, 118, 0.6); }
+        .fc-btn { width: 65px; height: 65px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.3); background: rgba(255, 255, 255, 0.05); box-shadow: 0 5px 15px rgba(0,0,0,0.2), inset 0 0 10px rgba(255,255,255,0.1); transition: 0.2s; position: relative; z-index: 1;}
+        .fc-btn::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 50%; z-index: -1; }
         .fc-btn:active { transform: scale(0.9); }
-        .fc-counter { text-align: center; font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 10px; font-weight: bold; position: relative; z-index: 2;}
+        .fc-btn svg { filter: drop-shadow(0 0 4px currentColor); }
+
+        .fc-counter { text-align: center; font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 10px; font-weight: bold; position: relative; z-index: 2; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);}
 
     </style>
 </head>
@@ -215,6 +229,7 @@
         <audio id="sfx-wrong" src="https://assets.mixkit.co/active_storage/sfx/946/946-preview.mp3" preload="auto"></audio>
         <audio id="sfx-win" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
         <audio id="sfx-lose" src="https://assets.mixkit.co/active_storage/sfx/3129/3129-preview.mp3" preload="auto"></audio>
+        <audio id="sfx-flip" src="https://assets.mixkit.co/active_storage/sfx/2397/2397-preview.mp3" preload="auto"></audio>
 
         <div class="popup-overlay" id="popup-marah"><img src="" class="popup-img" id="img-marah"></div>
         <div class="popup-overlay" id="popup-senyum"><img src="" class="popup-img" id="img-senyum"></div>
@@ -230,6 +245,7 @@
 
         <div class="scroll-area">
             <div class="app-container">
+                <!-- LOGIN SCREEN -->
                 <div id="screen-login" class="screen glass-box" style="margin: auto;">
                     <h1>おかえり！</h1>
                     <p>siapa ni yang lagi main?</p>
@@ -237,6 +253,7 @@
                     <button class="btn" onclick="prosesNama()">lanjut >></button>
                 </div>
 
+                <!-- LOFI SCREEN -->
                 <div id="screen-lofi" class="screen glass-box" style="margin: auto;">
                     <h3>Satu lagi...</h3>
                     <p style="font-size: 14px;">Mau pake lagu Lo-Fi buat nemenin belajarnya?</p>
@@ -246,6 +263,7 @@
                     </div>
                 </div>
 
+                <!-- HOME SCREEN: SUPER CLEAN (CUMA MILIH MODE) -->
                 <div id="screen-home" class="screen" style="position: relative; margin-top: 50px;">
                     <img src="belly-goler.gif" id="belly-home" onerror="this.src='icon-love.gif'">
 
@@ -261,9 +279,6 @@
                         </div>
                         
                         <div id="setup-bab" style="display:none;">
-                            <p>Pilih mau kosakata BAB berapa</p>
-                            <div class="bab-list" id="daftar-bab"></div>
-
                             <div class="furigana-toggle">
                                 <span>pake furigana?</span>
                                 <label class="switch">
@@ -273,33 +288,51 @@
                             </div>
                             
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; position: relative; z-index: 2;">
-                                <button class="btn" style="margin-bottom:0; font-size:14px; background: rgba(255, 235, 59, 0.2); border-color:#ffeb3b;" onclick="triggerBellyStart('flashcard')">Flashcard 🎴</button>
-                                <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="triggerBellyStart('quiz')">Santai ☕</button>
-                                <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="triggerBellyStart('sprint')">Tarik Tambang 🪢</button>
-                                <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="triggerBellyStart('survival')">Bertahan 🛡️</button>
+                                <button class="btn" style="margin-bottom:0; font-size:14px; background: rgba(255, 235, 59, 0.2); border-color:#ffeb3b;" onclick="bukaScreenBab('flashcard')">Flashcard 🎴</button>
+                                <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('quiz')">Santai ☕</button>
+                                <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('sprint')">Tarik Tambang 🪢</button>
+                                <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('survival')">Bertahan 🛡️</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- FLASHCARD UDAH DITENGAHIN MURNI PAKE FLEXBOX -->
-                <div id="screen-flashcard" class="screen" style="flex-grow: 1; justify-content: center;">
-                    <div style="width: 100%;">
+                <!-- SCREEN BARU: KHUSUS PILIH BAB (SCROLL HORIZONTAL) -->
+                <div id="screen-bab" class="screen" style="position: relative; margin-top: 50px;">
+                    <div class="glass-box" style="width: 100%;">
+                        <h3 style="margin-bottom: 15px;">Pilih Amunisi Bab</h3>
+                        
+                        <div class="bab-scroll-container" id="daftar-bab">
+                            <!-- Bab bakal di render ke sini otomatis manjang horizontal -->
+                        </div>
+                        
+                        <div style="position: relative; margin-top: 40px; margin-bottom: 10px; display: flex; justify-content: center;">
+                            <img src="belly-goler.gif" id="belly-start" onerror="this.src='icon-love.gif'">
+                            <button class="btn" style="background: rgba(0, 230, 118, 0.3); border-color: #00e676; color: #fff; max-width: 250px; margin: 0;" onclick="mulaiGameDariBab()">🚀 START KUIS!</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FLASHCARD SCREEN: KACA BISA FLIP, LOGO CUSTOM ESTETIK -->
+                <div id="screen-flashcard" class="screen" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
+                    <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
                         <div class="fc-counter" id="fc-sisa">sisa: 0 kartu</div>
                         
                         <div class="fc-wrapper">
-                            <!-- Kaca Estetik Terang -->
-                            <div class="fc-glass-bg"></div>
+                            <!-- ENGSEL ILUSI OPTIK BUAT KACA DI BELAKANG -->
+                            <div id="fc-glass-flipper">
+                                <div class="fc-glass-bg"></div>
+                            </div>
                             
                             <div class="fc-scene">
                                 <div class="fc-card" id="fc-card" onclick="flipCard()">
-                                    <!-- DEPAN: Murni Kanji doang -->
+                                    <!-- DEPAN MURNI KANJI -->
                                     <div class="fc-face fc-front" id="fc-front">
                                         <button class="btn-tts" onclick="speakText(event, 'front')" id="tts-front">🔊</button>
                                         <div id="fc-tanya" style="text-align:center; position: relative; z-index: 2;"></div>
-                                        <p style="font-size:12px; margin-top:20px; color:#aaa; font-weight:normal;">(tap kartu buat balik)</p>
+                                        <p style="font-size:12px; margin-top:30px; color:#ddd; font-weight:normal; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">(tap kartu buat balik)</p>
                                     </div>
-                                    <!-- BELAKANG: Murni Arti + Cara Baca (Kaga ada tombol TTS) -->
+                                    <!-- BELAKANG MURNI ARTI + ROMAJI -->
                                     <div class="fc-face fc-back" id="fc-back">
                                         <div id="fc-jawab" style="text-align:center; position: relative; z-index: 2;"></div>
                                     </div>
@@ -307,9 +340,14 @@
                             </div>
                         </div>
 
+                        <!-- TOMBOL KUSTOM SVG -->
                         <div class="fc-btn-row" id="fc-action">
-                            <button class="fc-btn fc-btn-salah" onclick="nilaiFlashcard(false)">❌</button>
-                            <button class="fc-btn fc-btn-bener" onclick="nilaiFlashcard(true)">⭕</button>
+                            <button class="fc-btn" onclick="nilaiFlashcard(false)">
+                                <svg viewBox="0 0 24 24" width="28" height="28" stroke="#ff1744" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                            <button class="fc-btn" onclick="nilaiFlashcard(true)">
+                                <svg viewBox="0 0 24 24" width="28" height="28" stroke="#00e676" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -357,7 +395,7 @@
         </div>
 
         <div class="bottom-controls" id="bottom-controls" style="display: none;">
-            <button class="btn-minimal" onclick="quitGame()">keluar game</button>
+            <button class="btn-minimal" id="btn-bawah" onclick="quitGame()">keluar game</button>
         </div>
     </div>
 
@@ -572,43 +610,65 @@
             pindahScreen('screen-home');
         }
 
-        function triggerBellyStart(mode) {
+        // FUNGSI BARU: BUKA LAYAR PILIH BAB DARI HOME
+        function bukaScreenBab(mode) {
             maininSound('sfx-click');
-            let b = document.getElementById('belly-home');
-            b.classList.add('belly-kaget');
+            modeGame = mode; // simpen mode yang dipilih
+            pindahScreen('screen-bab');
+            
+            // Atur tombol melayang jadi "Kembali"
+            document.getElementById('bottom-controls').style.display = 'flex';
+            let btnBawah = document.getElementById('btn-bawah');
+            btnBawah.innerText = "kembali";
+            btnBawah.onclick = kembaliKeHomeDariBab;
+        }
+
+        // FUNGSI BARU: BALIK KE HOME DARI LAYAR PILIH BAB
+        function kembaliKeHomeDariBab() {
+            maininSound('sfx-click');
+            pindahScreen('screen-home');
+            document.getElementById('bottom-controls').style.display = 'none';
+        }
+
+        // FUNGSI BARU: START KUIS SETELAH MILIH BAB
+        function mulaiGameDariBab() {
+            let babDipilih = Array.from(document.querySelectorAll('.cek-bab:checked')).map(cb => parseInt(cb.value));
+            if(babDipilih.length === 0) return alert("centang minimal satu bab dulu bossku!");
+
+            maininSound('sfx-click');
+            
+            // Belly kaget di atas tombol Start
+            let b = document.getElementById('belly-start');
+            b.classList.add('belly-start-kaget');
+            
             setTimeout(() => {
-                b.classList.remove('belly-kaget'); 
-                mulai(mode);
+                b.classList.remove('belly-start-kaget'); 
+                mulai(); // Lanjut jalani mesin game asli
             }, 800);
         }
 
-        function acak(arr) { return arr.sort(() => Math.random() - 0.5); }
-        
-        function cariPengecoh(jawabanBener, kolom) {
-            let kumpul = filteredData.map(k => k[kolom]).filter(v => v && v !== jawabanBener);
-            return acak(kumpul).slice(0, 3);
-        }
-
-        function mulai(pilihanMode) {
+        function mulai() {
             let babDipilih = Array.from(document.querySelectorAll('.cek-bab:checked')).map(cb => parseInt(cb.value));
-            if(babDipilih.length === 0) return alert("centang minimal satu bab!");
-
-            modeGame = pilihanMode; combo = 0; isGameOver = false;
+            
+            combo = 0; isGameOver = false;
             document.getElementById('low-hp-vignette').classList.remove('low-hp-on');
             document.getElementById('sfx-heartbeat').pause();
             
             filteredData = dataVocab.filter(k => babDipilih.includes(k.bab)); 
             
+            // Atur ulang tombol melayang jadi Keluar Game
+            let btnBawah = document.getElementById('btn-bawah');
+            btnBawah.innerText = "keluar game";
+            btnBawah.onclick = quitGame;
+            
             if(modeGame === 'flashcard') {
                 flashcards = acak([...filteredData]);
                 fcIndex = 0;
-                document.getElementById('bottom-controls').style.display = 'flex';
                 pindahScreen('screen-flashcard');
                 tampilFlashcard();
                 return;
             }
 
-            document.getElementById('bottom-controls').style.display = 'flex';
             soalKuis = [];
             filteredData.forEach(k => {
                 soalKuis.push({ tipe: 'arti', kanji: k.kanji, furigana: k.cara_baca, arti: k.arti, bener: k.arti, opsi: acak([k.arti, ...cariPengecoh(k.arti, 'arti')]) });
@@ -628,30 +688,27 @@
             pindahScreen('screen-play'); tampilSoal();
         }
 
-        // PERBAIKAN TEKS FLASHCARD (Murni Kanji Depan, Arti + Cara Baca Belakang)
         function tampilFlashcard() {
             if(flashcards.length === 0) {
                 alert("Semua kartu udah hafal bossku! Balik home ya.");
-                return kembaliHome();
+                return kembaliKeHomeDariBab(); // Balik ke Home
             }
             if(fcIndex >= flashcards.length) fcIndex = 0;
             
             isFlipped = false;
             document.getElementById('fc-card').classList.remove('is-flipped');
+            document.getElementById('fc-glass-flipper').classList.remove('is-flipped');
             document.getElementById('fc-action').classList.remove('show');
             document.getElementById('fc-sisa').innerText = `sisa: ${flashcards.length} kartu`;
             
             let data = flashcards[fcIndex];
-            let pakeFurigana = document.getElementById('toggle-furigana').checked;
             
-            // KANJI AJA DI DEPAN
-            let frontHTML = `<p style="font-size:42px; font-weight:900; color:#ffeb3b; text-shadow:2px 2px 5px rgba(0,0,0,0.9); margin:0;">${data.kanji}</p>`;
+            let frontHTML = `<p style="font-size:54px; font-weight:900; color:#ffeb3b; text-shadow:3px 3px 6px rgba(0,0,0,0.9); margin:0;">${data.kanji}</p>`;
             document.getElementById('fc-tanya').innerHTML = frontHTML;
             
-            // ARTI + CARA BACA DI BELAKANG
-            let backHTML = `<p style="font-size:24px; font-weight:bold; margin-bottom: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.9);">${data.arti}</p>`;
-            if(pakeFurigana && data.cara_baca) {
-                backHTML += `<p style="font-size:18px; font-weight:normal; color:#e0e0e0; margin:0; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">(${data.cara_baca})</p>`;
+            let backHTML = `<p style="font-size:28px; font-weight:900; margin-bottom: 8px; text-shadow: 2px 2px 4px rgba(0,0,0,0.9); color: #fff;">${data.arti}</p>`;
+            if(data.cara_baca) {
+                backHTML += `<p style="font-size:20px; font-weight:bold; color:#ffeb3b; margin:0; text-shadow: 1px 1px 3px rgba(0,0,0,0.9);">(${data.cara_baca})</p>`;
             }
             document.getElementById('fc-jawab').innerHTML = backHTML;
             
@@ -660,17 +717,20 @@
             document.getElementById('tts-front').style.display = 'inline-flex';
         }
 
-        // ANIMASI KLIK FLASHCARD
         function flipCard() {
-            maininSound('sfx-click');
+            maininSound('sfx-flip');
             isFlipped = !isFlipped;
             let card = document.getElementById('fc-card');
+            let flipper = document.getElementById('fc-glass-flipper');
+            
             if(isFlipped) {
                 card.classList.add('is-flipped');
+                flipper.classList.add('is-flipped'); // Kaca Ikut Balik (Ilusi Optik)
                 document.getElementById('fc-action').classList.add('show');
                 document.getElementById('tts-front').style.display = 'none';
             } else {
                 card.classList.remove('is-flipped');
+                flipper.classList.remove('is-flipped');
                 document.getElementById('fc-action').classList.remove('show');
                 document.getElementById('tts-front').style.display = 'inline-flex';
             }
@@ -681,6 +741,7 @@
             if(hafal) { flashcards.splice(fcIndex, 1); } else { fcIndex++; }
             isFlipped = false;
             document.getElementById('fc-card').classList.remove('is-flipped');
+            document.getElementById('fc-glass-flipper').classList.remove('is-flipped');
             document.getElementById('fc-action').classList.remove('show');
             setTimeout(tampilFlashcard, 300);
         }
@@ -697,7 +758,7 @@
             document.getElementById('low-hp-vignette').classList.remove('low-hp-on'); document.getElementById('sfx-heartbeat').pause();
             document.getElementById('popup-marah').style.display = 'none'; document.getElementById('popup-senyum').style.display = 'none';
             document.getElementById('flash-overlay').style.backgroundColor = 'transparent'; document.getElementById('bottom-controls').style.display = 'none';
-            kembaliHome();
+            kembaliKeHomeDariBab(); // Balik ke layar Home
         }
 
         function confirmQuitNo() {
