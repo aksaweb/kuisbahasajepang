@@ -34,7 +34,7 @@
         .scroll-area { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; overflow-x: hidden; z-index: 10; -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .scroll-area::-webkit-scrollbar { display: none; }
 
-        .app-container { width: 100%; max-width: 480px; padding: 20px; display: flex; flex-direction: column; gap: 15px; margin: 0 auto; min-height: 100%; justify-content: center; }
+        .app-container { width: 100%; max-width: 480px; padding: 20px; display: flex; flex-direction: column; gap: 15px; margin: 0 auto; min-height: 100%; justify-content: center; position: relative; }
         .bottom-controls { position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; z-index: 50; pointer-events: auto; }
         
         .btn-minimal { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 1; position: relative;}
@@ -42,26 +42,28 @@
 
         @keyframes iosRepaint { 0% { transform: scale(1); } 100% { transform: scale(1.0001); } }
 
-        /* KACA PREMIUM TIPIS: Warna Putih Jernih & Blur diturunin jadi 3px */
+        /* KACA UTAMA (Login, Home, Bab): Blur 3px & Warna Jernih */
         .glass-box { position: relative; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate; }
         .glass-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); z-index: -1; border-radius: 20px;}
         .glass-box::after { content: ""; position: absolute; top: -50%; left: -100%; width: 50%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%); transform: skewX(-20deg); animation: lightSweep 6s infinite; pointer-events: none; z-index: 0; }
         @keyframes lightSweep { 0% { left: -100%; } 20%, 100% { left: 200%; } }
 
-        /* SOAL TETEP 1PX NATURAL */
-        #question-box { position: relative; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 1; transform: scale(1) translateY(0); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
+        /* KACA SOAL: Blur 1px Mutlak */
+        #question-box { position: relative; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 1; transform: scale(1) translateY(0); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
         #question-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 20px; z-index: -1; }
         
-        .review-box { position: relative; background: rgba(0,0,0,0.4); backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
+        .review-box { position: relative; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
         .review-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 10px; z-index: -1; }
         
         h1, h2, h3 { text-align: center; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); position: relative; z-index: 2;}
         p { text-align: center; margin-bottom: 15px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); position: relative; z-index: 2;}
 
-        input[type="text"] { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3); outline: none; background: rgba(255, 255, 255, 0.1); color: #fff; font-weight: bold; margin-bottom: 15px; text-align: center; transition: 0.3s; position: relative; z-index: 1; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);}
+        input[type="text"] { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3); outline: none; background: rgba(255, 255, 255, 0.1); color: #fff; font-weight: bold; margin-bottom: 15px; text-align: center; transition: 0.3s; position: relative; z-index: 1;}
+        input[type="text"]::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; z-index: -1; }
         input[type="text"]:focus { background: rgba(255,255,255,0.25); }
 
-        .btn { display: block; width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255, 255, 255, 0.1); color: white; font-size: 18px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: all 0.2s; margin-bottom: 10px; position: relative; z-index: 1; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);}
+        .btn { display: block; width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255, 255, 255, 0.1); color: white; font-size: 18px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: all 0.2s; margin-bottom: 10px; position: relative; z-index: 1;}
+        .btn::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; z-index: -1; }
         .btn:hover, .btn:active { background: rgba(255, 255, 255, 0.25); transform: scale(0.97); }
 
         .furigana-toggle { display: flex; justify-content: flex-end; align-items: center; gap: 10px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); margin-bottom: 5px; position: relative; z-index: 2;}
@@ -72,7 +74,9 @@
         input:checked + .slider { background-color: rgba(255,255,255,0.5); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        .opsi-btn { display: block; width: 100%; padding: 12px 15px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255,255,255,0.4); border-radius: 12px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s; text-align: left; box-shadow: 0 4px 6px rgba(0,0,0,0.2); text-shadow: 1px 1px 3px rgba(0,0,0,0.7); position: relative; z-index: 1; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px);}
+        /* TOMBOL OPSI SOAL: Blur 1px */
+        .opsi-btn { display: block; width: 100%; padding: 12px 15px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.4); border-radius: 12px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s; text-align: left; box-shadow: 0 4px 6px rgba(0,0,0,0.2); text-shadow: 1px 1px 3px rgba(0,0,0,0.7); position: relative; z-index: 1;}
+        .opsi-btn::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 12px; z-index: -1; }
         .opsi-btn:hover, .opsi-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.98); }
 
         ruby { font-size: 28px; font-weight: 900; color: #ffeb3b; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
@@ -104,7 +108,7 @@
         .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
         .active-screen { display: flex; flex-direction: column; justify-content: center; opacity: 1; transform: scale(1) translateY(0); }
         
-        /* SCROLL HORIZONTAL KHUSUS PILIH BAB (ELEGAN & CLEAN) */
+        /* SCROLL HORIZONTAL KHUSUS PILIH BAB */
         .bab-scroll-container { display: flex; overflow-x: auto; gap: 10px; padding: 10px 5px; margin-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; position: relative; z-index: 2; width: 100%; }
         .bab-scroll-container::-webkit-scrollbar { display: none; }
         .bab-scroll-container label { flex: 0 0 auto; background: rgba(0,0,0,0.3); padding: 10px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); transition: 0.2s;}
@@ -133,17 +137,18 @@
         .belly-load-kaget { animation: bellyJatohLoad 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
         @keyframes bellyJatohLoad { 0% { transform: translateX(-50%) translateY(-20px) scale(1.1); } 100% { transform: translateX(-50%) translateY(120vh) scale(1); opacity: 0; } }
 
-        /* BELLY HOME DI KANAN BALIK NORMAL (VINYL DI KIRI) */
-        #belly-home { position: absolute; top: -75px; right: 0px; width: 150px; z-index: 10; pointer-events: none; }
+        /* BELLY HOME DI POJOK KIRI, UKURAN NORMAL */
+        #belly-home { position: absolute; top: -65px; left: -10px; width: 100px; z-index: 10; pointer-events: none; }
         
-        /* BELLY START JUMBO, NANGKRING MANJA DI UJUNG KANAN TOMBOL START */
-        #belly-start { position: absolute; top: -85px; right: -30px; width: 140px; z-index: 10; pointer-events: none; }
-        .belly-start-kaget { animation: bellyJatohStart 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
+        /* BELLY START DI POJOK KANAN TOMBOL, UKURAN NORMAL */
+        #belly-start { position: absolute; top: -55px; right: -15px; width: 90px; z-index: 10; pointer-events: none; }
+        .belly-start-kaget { animation: bellyJatohStart 0.6s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
         @keyframes bellyJatohStart { 0% { transform: translateY(0) scale(1.1); } 100% { transform: translateY(120vh) scale(1); opacity: 0; } }
 
-        .top-bar-custom { position: absolute; top: 15px; left: 15px; display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; z-index: 50; }
+        /* VINYL KEMBALI KE KANAN ATAS */
+        .top-bar-custom { position: absolute; top: 15px; right: 15px; display: flex; align-items: center; gap: 10px; z-index: 50; }
         .vinyl-text { font-family: 'VT323', monospace; font-size: 16px; color: #ffeb3b; white-space: nowrap; overflow: hidden; max-width: 0; opacity: 0; transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1); text-shadow: 1px 1px 0px rgba(0,0,0,0.8); }
-        .vinyl-text.show { max-width: 150px; opacity: 1; margin-left: 5px; }
+        .vinyl-text.show { max-width: 150px; opacity: 1; margin-right: 5px; }
         .vinyl-btn { position: relative; width: 40px; height: 40px; cursor: pointer; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .vinyl-disc { width: 100%; height: 100%; object-fit: contain; transition: 0.3s; }
         .spin { animation: muter 3s linear infinite; }
@@ -157,7 +162,7 @@
         /* FLASHCARD ILUSI OPTIK 3D (HACK SAFARI IOS) */
         .fc-wrapper { position: relative; width: 260px; height: 360px; margin-bottom: 20px; }
         
-        /* ENGSEL ILUSI KACA (Biar Kaca Keliatan Balik Tapi Kaga Error di iOS) */
+        /* ENGSEL ILUSI KACA */
         #fc-glass-flipper { position: absolute; inset: 0; z-index: 1; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-origin: center; }
         #fc-glass-flipper.is-flipped { transform: scaleX(-1); }
 
@@ -266,8 +271,8 @@
                     </div>
                 </div>
 
-                <!-- HOME SCREEN: SUPER CLEAN -->
-                <div id="screen-home" class="screen">
+                <!-- HOME SCREEN: SUPER CLEAN (BELLY DI KIRI ATAS) -->
+                <div id="screen-home" class="screen" style="position: relative;">
                     <img src="belly-goler.gif" id="belly-home" onerror="this.src='icon-love.gif'">
 
                     <div class="glass-box" style="width: 100%;">
@@ -300,18 +305,18 @@
                     </div>
                 </div>
 
-                <!-- SCREEN BARU: KHUSUS PILIH BAB -->
-                <div id="screen-bab" class="screen">
+                <!-- SCREEN BARU: PILIH BAB (CENTER MUTLAK) -->
+                <div id="screen-bab" class="screen" style="position: relative;">
                     <div class="glass-box" style="width: 100%;">
                         <h3 style="margin-bottom: 15px;">Pilih Amunisi Bab</h3>
                         
                         <div class="bab-scroll-container" id="daftar-bab">
-                            <!-- Bab bakal di render ke sini otomatis manjang horizontal -->
+                            <!-- Bab bakal di render ke sini -->
                         </div>
                         
                         <div style="display: flex; justify-content: center; margin-top: 40px; margin-bottom: 10px;">
                             <div style="position: relative; width: 100%; max-width: 250px;">
-                                <!-- BELLY NANGKRING MANJA DI UJUNG TOMBOL START -->
+                                <!-- BELLY NANGKRING MANJA DI POJOK KANAN TOMBOL START -->
                                 <img src="belly-goler.gif" id="belly-start" onerror="this.src='icon-love.gif'">
                                 <button class="btn" style="background: rgba(0, 230, 118, 0.3); border-color: #00e676; color: #fff; width: 100%; margin: 0;" onclick="mulaiGameDariBab()">🚀 START KUIS!</button>
                             </div>
@@ -618,27 +623,25 @@
             pindahScreen('screen-home');
         }
 
-        // FUNGSI BARU: BUKA LAYAR PILIH BAB DARI HOME
+        // BUKA LAYAR PILIH BAB DARI HOME
         function bukaScreenBab(mode) {
             maininSound('sfx-click');
             modeGame = mode; 
             pindahScreen('screen-bab');
             
-            // Atur tombol melayang jadi "Kembali"
             document.getElementById('bottom-controls').style.display = 'flex';
             let btnBawah = document.getElementById('btn-bawah');
             btnBawah.innerText = "kembali";
             btnBawah.onclick = kembaliKeHomeDariBab;
         }
 
-        // FUNGSI BARU: BALIK KE HOME DARI LAYAR PILIH BAB
         function kembaliKeHomeDariBab() {
             maininSound('sfx-click');
             pindahScreen('screen-home');
             document.getElementById('bottom-controls').style.display = 'none';
         }
 
-        // FUNGSI BARU: FIX BUG START KUIS
+        // FIX MUTLAK BUG START KUIS
         function mulaiGameDariBab() {
             let babDipilih = Array.from(document.querySelectorAll('.cek-bab:checked')).map(cb => parseInt(cb.value));
             if(babDipilih.length === 0) return alert("centang minimal satu bab dulu bossku!");
@@ -650,8 +653,8 @@
             
             setTimeout(() => {
                 b.classList.remove('belly-start-kaget'); 
-                mulai(); // Langsung tancap gas eksekusi kuisnya
-            }, 800);
+                mulai(); 
+            }, 600); // Timer dipercepat dikit biar lincah
         }
 
         function mulai() {
@@ -661,9 +664,14 @@
             document.getElementById('low-hp-vignette').classList.remove('low-hp-on');
             document.getElementById('sfx-heartbeat').pause();
             
-            filteredData = dataVocab.filter(k => babDipilih.includes(k.bab)); 
+            // FIX: Parsing mutlak biar string k.bab dari excel ga bikin array kosong
+            filteredData = dataVocab.filter(k => babDipilih.includes(parseInt(k.bab))); 
             
-            // Atur ulang tombol melayang jadi Keluar Game
+            if(filteredData.length === 0) {
+                alert("Data kosakata kosong bossku! Coba upload ulang excelnya.");
+                return;
+            }
+            
             let btnBawah = document.getElementById('btn-bawah');
             btnBawah.innerText = "keluar game";
             btnBawah.onclick = quitGame;
@@ -693,6 +701,13 @@
             } else { document.getElementById('game-ui').style.display = 'none'; }
 
             pindahScreen('screen-play'); tampilSoal();
+        }
+
+        // LOGIKA PENGECOH YANG DIJAMIN AMAN
+        function cariPengecoh(jawabanBener, kolom) {
+            if(!filteredData || filteredData.length === 0) return ["A", "B", "C"];
+            let kumpul = filteredData.map(k => k[kolom]).filter(v => v && v !== jawabanBener);
+            return acak(kumpul).slice(0, 3);
         }
 
         function tampilFlashcard() {
@@ -883,22 +898,36 @@
             document.getElementById('review-salah').innerHTML = htmlReview;
         }
 
-        function kembaliHome() { maininSound('sfx-click'); crossfadeBGM('siang'); gantiBackground(bgSiangPlayer); pindahScreen('screen-home'); }
-
+        // FUNGSI GANTI LAYAR ANTI OVERLAP
         function pindahScreen(idTarget) {
             if(idTarget === 'screen-home' && document.getElementById('sapaan-home').innerText !== "") { document.getElementById('ui-vinyl').style.display = 'flex'; } 
             else { document.getElementById('ui-vinyl').style.display = 'none'; }
 
             let current = document.querySelector('.active-screen');
+            let target = document.getElementById(idTarget);
+
             if(current && current.id !== idTarget) {
                 current.style.opacity = '0'; current.style.transform = 'scale(0.95) translateY(10px)';
                 setTimeout(() => {
                     current.classList.remove('active-screen'); current.style.display = 'none';
-                    let target = document.getElementById(idTarget); target.style.display = 'flex'; target.style.flexDirection = 'column'; target.style.justifyContent = 'center'; void target.offsetWidth; 
+                    
+                    target.style.display = 'flex'; 
+                    if(idTarget === 'screen-flashcard') {
+                        target.style.flexDirection = 'column'; 
+                        target.style.justifyContent = 'center'; 
+                        target.style.alignItems = 'center';
+                    }
+                    void target.offsetWidth; 
                     target.classList.add('active-screen'); target.style.opacity = '1'; target.style.transform = 'scale(1) translateY(0)';
                 }, 400);
-            } else {
-                let target = document.getElementById(idTarget); target.style.display = 'flex'; target.style.flexDirection = 'column'; target.style.justifyContent = 'center'; void target.offsetWidth;
+            } else if(!current || current.id !== idTarget) {
+                target.style.display = 'flex'; 
+                if(idTarget === 'screen-flashcard') {
+                    target.style.flexDirection = 'column'; 
+                    target.style.justifyContent = 'center'; 
+                    target.style.alignItems = 'center';
+                }
+                void target.offsetWidth;
                 target.classList.add('active-screen'); target.style.opacity = '1'; target.style.transform = 'scale(1) translateY(0)';
             }
         }
