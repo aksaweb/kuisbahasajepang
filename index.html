@@ -31,10 +31,12 @@
         .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.15); z-index: 2; pointer-events: none;}
         .low-hp-vignette { position: absolute; top:0; left:0; right:0; bottom:0; z-index: 3; pointer-events: none; opacity: 0; transition: opacity 0.5s; box-shadow: inset 0 0 80px rgba(255,0,0,0.8); }
         
-        .scroll-area { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; overflow-x: hidden; z-index: 10; -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        /* FIX PENYAKIT TENGAH LAYAR MUTLAK */
+        .scroll-area { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; overflow-x: hidden; z-index: 10; display: flex; flex-direction: column; -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .scroll-area::-webkit-scrollbar { display: none; }
 
-        .app-container { width: 100%; max-width: 480px; padding: 20px; display: flex; flex-direction: column; gap: 15px; margin: 0 auto; min-height: 100%; justify-content: center; position: relative; }
+        .app-container { width: 100%; max-width: 480px; padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: auto; position: relative; }
+        
         .bottom-controls { position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; z-index: 50; pointer-events: auto; }
         
         .btn-minimal { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 1; position: relative;}
@@ -42,14 +44,14 @@
 
         @keyframes iosRepaint { 0% { transform: scale(1); } 100% { transform: scale(1.0001); } }
 
-        /* KACA UTAMA (Login, Home, Bab): Blur 3px & Warna Jernih */
-        .glass-box { position: relative; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate; }
+        /* KACA UTAMA: Blur 3px & Warna Jernih */
+        .glass-box { position: relative; width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate; }
         .glass-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); z-index: -1; border-radius: 20px;}
         .glass-box::after { content: ""; position: absolute; top: -50%; left: -100%; width: 50%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%); transform: skewX(-20deg); animation: lightSweep 6s infinite; pointer-events: none; z-index: 0; }
         @keyframes lightSweep { 0% { left: -100%; } 20%, 100% { left: 200%; } }
 
         /* KACA SOAL: Blur 1px Mutlak */
-        #question-box { position: relative; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 1; transform: scale(1) translateY(0); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
+        #question-box { position: relative; width: 100%; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 1; transform: scale(1) translateY(0); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
         #question-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 20px; z-index: -1; }
         
         .review-box { position: relative; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
@@ -74,7 +76,6 @@
         input:checked + .slider { background-color: rgba(255,255,255,0.5); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* TOMBOL OPSI SOAL: Blur 1px */
         .opsi-btn { display: block; width: 100%; padding: 12px 15px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.4); border-radius: 12px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s; text-align: left; box-shadow: 0 4px 6px rgba(0,0,0,0.2); text-shadow: 1px 1px 3px rgba(0,0,0,0.7); position: relative; z-index: 1;}
         .opsi-btn::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 12px; z-index: -1; }
         .opsi-btn:hover, .opsi-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.98); }
@@ -82,7 +83,7 @@
         ruby { font-size: 28px; font-weight: 900; color: #ffeb3b; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
         rt { font-size: 14px; color: #fff; }
 
-        #game-ui { margin-bottom: 25px; padding: 0 25px; position: relative; } 
+        #game-ui { margin-bottom: 25px; padding: 0 25px; position: relative; width: 100%; } 
         .bar-container { width: 100%; height: 28px; background: rgba(0,0,0,0.5); border-radius: 15px; position: relative; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .midpoint { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.2); z-index: 1; }
         .avatar-bar { width: 60px; height: 60px; object-fit: cover; aspect-ratio: 1/1; border-radius: 50%; border: 3px solid rgba(255,255,255,0.8); position: absolute; top: 50%; z-index: 3; box-shadow: 0 4px 15px rgba(0,0,0,0.7); background-color: #1a1a2e; }
@@ -105,7 +106,8 @@
         .popup-img { max-width: 90%; max-height: 65%; width: auto; object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        /* FIX TENGAH LAYAR MUTLAK */
+        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); margin: auto; }
         .active-screen { display: flex; flex-direction: column; justify-content: center; opacity: 1; transform: scale(1) translateY(0); }
         
         /* SCROLL HORIZONTAL KHUSUS PILIH BAB */
@@ -116,7 +118,7 @@
         .bab-scroll-container input { margin-right: 5px; }
 
         /* RESULT KAGA DISENTUH POSISINYA, TENGAH TETEP PLONG */
-        #screen-result { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-top: 20px; padding-bottom: 20px; height: 100%; width: 100%; }
+        #screen-result { margin: 0; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-top: 20px; padding-bottom: 20px; height: 100%; width: 100%; }
         .result-header { width: 100%; text-align: center; margin-top: 0; margin-bottom: auto; }
         .result-footer { width: 100%; display: flex; flex-direction: column; justify-content: flex-end; margin-top: auto; margin-bottom: 0; }
         .result-body { width: 100%; max-height: 40vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; margin-top: 10px; }
@@ -137,11 +139,11 @@
         .belly-load-kaget { animation: bellyJatohLoad 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
         @keyframes bellyJatohLoad { 0% { transform: translateX(-50%) translateY(-20px) scale(1.1); } 100% { transform: translateX(-50%) translateY(120vh) scale(1); opacity: 0; } }
 
-        /* BELLY HOME DI POJOK KIRI, UKURAN NORMAL */
-        #belly-home { position: absolute; top: -65px; left: -10px; width: 100px; z-index: 10; pointer-events: none; }
+        /* FIX POSISI BELLY NGAMBANG: GIGIT GARIS MUTLAK */
+        #belly-home { position: absolute; bottom: 100%; left: -5px; width: 100px; margin-bottom: -3px; z-index: 10; pointer-events: none; }
         
-        /* BELLY START DI POJOK KANAN TOMBOL, UKURAN NORMAL */
-        #belly-start { position: absolute; top: -55px; right: -15px; width: 90px; z-index: 10; pointer-events: none; }
+        /* BELLY START JUMBO, NANGKRING MANJA DI POJOK KANAN TOMBOL START & KAGA NGAMBANG */
+        #belly-start { position: absolute; bottom: 100%; right: 10px; width: 90px; margin-bottom: -5px; z-index: 10; pointer-events: none; }
         .belly-start-kaget { animation: bellyJatohStart 0.6s cubic-bezier(0.5, -0.5, 0.5, 1.5) forwards !important; }
         @keyframes bellyJatohStart { 0% { transform: translateY(0) scale(1.1); } 100% { transform: translateY(120vh) scale(1); opacity: 0; } }
 
@@ -159,7 +161,7 @@
         .btn-tts::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 50%; z-index: -1; }
         .btn-tts:active { transform: scale(0.9); }
 
-        /* FLASHCARD ILUSI OPTIK 3D (HACK SAFARI IOS) */
+        /* FLASHCARD ILUSI OPTIK 3D */
         .fc-wrapper { position: relative; width: 260px; height: 360px; margin-bottom: 20px; }
         
         /* ENGSEL ILUSI KACA */
@@ -253,61 +255,63 @@
 
         <div class="scroll-area">
             <div class="app-container">
-                <!-- LOGIN SCREEN (CENTER MUTLAK) -->
-                <div id="screen-login" class="screen glass-box">
-                    <h1>おかえり！</h1>
-                    <p>siapa ni yang lagi main?</p>
-                    <input type="text" id="input-nama" placeholder="ketik nama..." autocomplete="off">
-                    <button class="btn" onclick="prosesNama()">lanjut >></button>
-                </div>
-
-                <!-- LOFI SCREEN (CENTER MUTLAK) -->
-                <div id="screen-lofi" class="screen glass-box">
-                    <h3>Satu lagi...</h3>
-                    <p style="font-size: 14px;">Mau pake lagu Lo-Fi buat nemenin belajarnya?</p>
-                    <div style="display:flex; gap:15px; margin-top:20px;">
-                        <button class="btn" onclick="ijinAudio(false)" style="background: rgba(255,50,50,0.3);">❌ Engga</button>
-                        <button class="btn" onclick="ijinAudio(true)" style="background: rgba(50,255,50,0.3);">⭕ Iya</button>
+                <div id="screen-login" class="screen">
+                    <div class="glass-box">
+                        <h1>おかえり！</h1>
+                        <p>siapa ni yang lagi main?</p>
+                        <input type="text" id="input-nama" placeholder="ketik nama..." autocomplete="off">
+                        <button class="btn" onclick="prosesNama()">lanjut >></button>
                     </div>
                 </div>
 
-                <!-- HOME SCREEN: SUPER CLEAN (BELLY DI KIRI ATAS) -->
-                <div id="screen-home" class="screen" style="position: relative;">
-                    <img src="belly-goler.gif" id="belly-home" onerror="this.src='icon-love.gif'">
+                <div id="screen-lofi" class="screen">
+                    <div class="glass-box">
+                        <h3>Satu lagi...</h3>
+                        <p style="font-size: 14px;">Mau pake lagu Lo-Fi buat nemenin belajarnya?</p>
+                        <div style="display:flex; gap:15px; margin-top:20px;">
+                            <button class="btn" onclick="ijinAudio(false)" style="background: rgba(255,50,50,0.3);">❌ Engga</button>
+                            <button class="btn" onclick="ijinAudio(true)" style="background: rgba(50,255,50,0.3);">⭕ Iya</button>
+                        </div>
+                    </div>
+                </div>
 
-                    <div class="glass-box" style="width: 100%;">
-                        <div style="text-align: center; margin-bottom: 15px;">
-                            <h2 id="sapaan-home" style="margin-bottom: 0;"></h2>
-                        </div>
-                        
-                        <div id="area-upload" style="margin-bottom: 20px; background: rgba(255, 50, 50, 0.3); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,50,50,0.6);">
-                            <p style="font-weight: bold; color: #ffeb3b; margin-bottom: 5px; text-shadow: none;">⚠️ DATA KOSAKATA GAGAL DIMUAT</p>
-                            <p style="font-size: 12px; margin-bottom: 10px; font-weight: normal; color:#fff; text-shadow: none;">Kalo main di GitHub ini gara-gara cache nyangkut. Refresh webnya 1x. Kalo masih gabisa, upload manual aja:</p>
-                            <input type="file" id="file-excel" accept=".xlsx, .xls">
-                        </div>
-                        
-                        <div id="setup-bab" style="display:none;">
-                            <div class="furigana-toggle">
-                                <span>pake furigana?</span>
-                                <label class="switch">
-                                    <input type="checkbox" id="toggle-furigana" checked>
-                                    <span class="slider"></span>
-                                </label>
+                <div id="screen-home" class="screen">
+                    <div style="position: relative; width: 100%;">
+                        <img src="belly-goler.gif" id="belly-home" onerror="this.src='icon-love.gif'">
+
+                        <div class="glass-box">
+                            <div style="text-align: center; margin-bottom: 15px;">
+                                <h2 id="sapaan-home" style="margin-bottom: 0;"></h2>
                             </div>
                             
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; position: relative; z-index: 2;">
-                                <button class="btn" style="margin-bottom:0; font-size:14px; background: rgba(255, 235, 59, 0.2); border-color:#ffeb3b;" onclick="bukaScreenBab('flashcard')">Flashcard 🎴</button>
-                                <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('quiz')">Santai ☕</button>
-                                <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('sprint')">Tarik Tambang 🪢</button>
-                                <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('survival')">Bertahan 🛡️</button>
+                            <div id="area-upload" style="margin-bottom: 20px; background: rgba(255, 50, 50, 0.3); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,50,50,0.6);">
+                                <p style="font-weight: bold; color: #ffeb3b; margin-bottom: 5px; text-shadow: none;">⚠️ DATA KOSAKATA GAGAL DIMUAT</p>
+                                <p style="font-size: 12px; margin-bottom: 10px; font-weight: normal; color:#fff; text-shadow: none;">Kalo main di GitHub ini gara-gara cache nyangkut. Refresh webnya 1x. Kalo masih gabisa, upload manual aja:</p>
+                                <input type="file" id="file-excel" accept=".xlsx, .xls">
+                            </div>
+                            
+                            <div id="setup-bab" style="display:none;">
+                                <div class="furigana-toggle">
+                                    <span>pake furigana?</span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="toggle-furigana" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; position: relative; z-index: 2;">
+                                    <button class="btn" style="margin-bottom:0; font-size:14px; background: rgba(255, 235, 59, 0.2); border-color:#ffeb3b;" onclick="bukaScreenBab('flashcard')">Flashcard 🎴</button>
+                                    <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('quiz')">Santai ☕</button>
+                                    <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('sprint')">Tarik Tambang 🪢</button>
+                                    <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('survival')">Bertahan 🛡️</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- SCREEN BARU: PILIH BAB (CENTER MUTLAK) -->
-                <div id="screen-bab" class="screen" style="position: relative;">
-                    <div class="glass-box" style="width: 100%;">
+                <div id="screen-bab" class="screen">
+                    <div class="glass-box">
                         <h3 style="margin-bottom: 15px;">Pilih Amunisi Bab</h3>
                         
                         <div class="bab-scroll-container" id="daftar-bab">
@@ -324,26 +328,22 @@
                     </div>
                 </div>
 
-                <!-- FLASHCARD SCREEN: CENTER MUTLAK -->
-                <div id="screen-flashcard" class="screen" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
+                <div id="screen-flashcard" class="screen">
                     <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
                         <div class="fc-counter" id="fc-sisa">sisa: 0 kartu</div>
                         
                         <div class="fc-wrapper">
-                            <!-- ENGSEL ILUSI OPTIK BUAT KACA DI BELAKANG -->
                             <div id="fc-glass-flipper">
                                 <div class="fc-glass-bg"></div>
                             </div>
                             
                             <div class="fc-scene">
                                 <div class="fc-card" id="fc-card" onclick="flipCard()">
-                                    <!-- DEPAN MURNI KANJI -->
                                     <div class="fc-face fc-front" id="fc-front">
                                         <button class="btn-tts" onclick="speakText(event, 'front')" id="tts-front">🔊</button>
                                         <div id="fc-tanya" style="text-align:center; position: relative; z-index: 2;"></div>
                                         <p style="font-size:12px; margin-top:30px; color:#ddd; font-weight:normal; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">(tap kartu buat balik)</p>
                                     </div>
-                                    <!-- BELAKANG MURNI ARTI + ROMAJI -->
                                     <div class="fc-face fc-back" id="fc-back">
                                         <div id="fc-jawab" style="text-align:center; position: relative; z-index: 2;"></div>
                                     </div>
@@ -351,7 +351,6 @@
                             </div>
                         </div>
 
-                        <!-- TOMBOL KUSTOM SVG -->
                         <div class="fc-btn-row" id="fc-action">
                             <button class="fc-btn" onclick="nilaiFlashcard(false)">
                                 <svg viewBox="0 0 24 24" width="28" height="28" stroke="#ff1744" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -363,33 +362,33 @@
                     </div>
                 </div>
 
-                <!-- SOAL SCREEN: CENTER MUTLAK -->
                 <div id="screen-play" class="screen">
-                    <div id="game-ui" style="display: none;">
-                        <div class="bar-container">
-                            <img src="" class="avatar-bar avatar-left" id="avatar-kiri">
-                            <div id="bubble-kiri" class="chat-bubble chat-left"></div>
-                            
-                            <img src="" class="avatar-bar avatar-right" id="avatar-kanan">
-                            <div id="bubble-kanan" class="chat-bubble chat-right"></div>
-                            
-                            <div class="midpoint"></div>
-                            <img src="icon-love.gif" id="love-icon" class="love-icon" style="left: 0%;">
-                            <img src="belly-lari.gif" class="belly-icon" id="belly-pos">
+                    <div style="width: 100%;">
+                        <div id="game-ui" style="display: none;">
+                            <div class="bar-container">
+                                <img src="" class="avatar-bar avatar-left" id="avatar-kiri">
+                                <div id="bubble-kiri" class="chat-bubble chat-left"></div>
+                                
+                                <img src="" class="avatar-bar avatar-right" id="avatar-kanan">
+                                <div id="bubble-kanan" class="chat-bubble chat-right"></div>
+                                
+                                <div class="midpoint"></div>
+                                <img src="icon-love.gif" id="love-icon" class="love-icon" style="left: 0%;">
+                                <img src="belly-lari.gif" class="belly-icon" id="belly-pos">
+                            </div>
                         </div>
-                    </div>
 
-                    <div id="question-box">
-                        <h3 id="progress-soal">soal 1 / 10</h3>
-                        <div style="display:flex; justify-content:center; align-items:center; flex-direction:column; margin-bottom: 20px; position: relative; z-index: 2;">
-                            <div id="tempat-soal" style="text-align: center;"></div>
+                        <div id="question-box">
+                            <h3 id="progress-soal">soal 1 / 10</h3>
+                            <div style="display:flex; justify-content:center; align-items:center; flex-direction:column; margin-bottom: 20px; position: relative; z-index: 2;">
+                                <div id="tempat-soal" style="text-align: center;"></div>
+                            </div>
+                            <div id="tempat-opsi" style="position: relative; z-index: 2;"></div>
                         </div>
-                        <div id="tempat-opsi" style="position: relative; z-index: 2;"></div>
                     </div>
                 </div>
 
-                <!-- RESULT SCREEN: PLONG TETEP AMAN (KAGA DISENTUH) -->
-                <div id="screen-result" class="screen">
+                <div id="screen-result" class="screen" style="flex-grow: 1;">
                     <div class="result-header">
                         <h1 id="result-title"></h1>
                     </div>
@@ -583,8 +582,14 @@
             } catch (err) { console.log(err); }
         });
 
+        /* FIX 3: Ngebaca Data Excel mau huruf Gede atau Kecil */
         function renderBabList() {
-            let babs = [...new Set(dataVocab.map(item => item.bab))].sort((a,b)=>a-b);
+            let babs = [];
+            dataVocab.forEach(item => {
+                let val = item.bab || item.Bab || item.BAB;
+                if(val) babs.push(parseInt(val));
+            });
+            babs = [...new Set(babs)].sort((a,b)=>a-b);
             let htmlBab = '';
             babs.forEach(b => { htmlBab += `<label><input type="checkbox" class="cek-bab" value="${b}"> bab ${b}</label>`; });
             document.getElementById('daftar-bab').innerHTML = htmlBab;
@@ -623,7 +628,6 @@
             pindahScreen('screen-home');
         }
 
-        // BUKA LAYAR PILIH BAB DARI HOME
         function bukaScreenBab(mode) {
             maininSound('sfx-click');
             modeGame = mode; 
@@ -641,69 +645,99 @@
             document.getElementById('bottom-controls').style.display = 'none';
         }
 
-        // FIX MUTLAK BUG START KUIS
+        /* FIX 3: SAPU JAGAT BUG START KUIS */
         function mulaiGameDariBab() {
-            let babDipilih = Array.from(document.querySelectorAll('.cek-bab:checked')).map(cb => parseInt(cb.value));
-            if(babDipilih.length === 0) return alert("centang minimal satu bab dulu bossku!");
+            let chks = document.querySelectorAll('.cek-bab:checked');
+            if(chks.length === 0) {
+                alert("centang minimal satu bab dulu bossku!");
+                return;
+            }
+            let babDipilih = Array.from(chks).map(cb => parseInt(cb.value));
 
             maininSound('sfx-click');
             
             let b = document.getElementById('belly-start');
-            b.classList.add('belly-start-kaget');
+            if(b) b.classList.add('belly-start-kaget');
             
             setTimeout(() => {
-                b.classList.remove('belly-start-kaget'); 
-                mulai(); 
-            }, 600); // Timer dipercepat dikit biar lincah
+                if(b) b.classList.remove('belly-start-kaget'); 
+                mulai(babDipilih); 
+            }, 600); 
         }
 
-        function mulai() {
-            let babDipilih = Array.from(document.querySelectorAll('.cek-bab:checked')).map(cb => parseInt(cb.value));
-            
-            combo = 0; isGameOver = false;
-            document.getElementById('low-hp-vignette').classList.remove('low-hp-on');
-            document.getElementById('sfx-heartbeat').pause();
-            
-            // FIX: Parsing mutlak biar string k.bab dari excel ga bikin array kosong
-            filteredData = dataVocab.filter(k => babDipilih.includes(parseInt(k.bab))); 
-            
-            if(filteredData.length === 0) {
-                alert("Data kosakata kosong bossku! Coba upload ulang excelnya.");
-                return;
+        function mulai(babDipilih) {
+            try {
+                combo = 0; isGameOver = false;
+                
+                let vignet = document.getElementById('low-hp-vignette');
+                if(vignet) vignet.classList.remove('low-hp-on');
+                let hb = document.getElementById('sfx-heartbeat');
+                if(hb) hb.pause();
+                
+                filteredData = dataVocab.filter(k => {
+                    let val = parseInt(k.bab || k.Bab || k.BAB || 0);
+                    return babDipilih.includes(val);
+                }); 
+                
+                if(!filteredData || filteredData.length === 0) {
+                    alert("Waduh, data kosakata kosong boss! Cek tulisan kolom 'bab' di Excel lu bener ga?");
+                    return;
+                }
+                
+                let btnBawah = document.getElementById('btn-bawah');
+                if(btnBawah) {
+                    btnBawah.innerText = "keluar game";
+                    btnBawah.onclick = quitGame;
+                }
+                
+                if(modeGame === 'flashcard') {
+                    flashcards = acak([...filteredData]);
+                    fcIndex = 0;
+                    tampilFlashcard();
+                    pindahScreen('screen-flashcard');
+                    return;
+                }
+
+                soalKuis = [];
+                filteredData.forEach(k => {
+                    if(k.arti && k.kanji) {
+                        soalKuis.push({ tipe: 'arti', kanji: k.kanji, furigana: k.cara_baca, arti: k.arti, bener: k.arti, opsi: acak([k.arti, ...cariPengecoh(k.arti, 'arti')]) });
+                        soalKuis.push({ tipe: 'jepang', tanya: `bhs jepangnya:<br><b style="font-size:22px;">"${k.arti}"</b>`, bener: k.kanji, opsi: acak([k.kanji, ...cariPengecoh(k.kanji, 'kanji')]) });
+                    }
+                });
+
+                if(soalKuis.length === 0) {
+                    alert("Gagal bikin kuis boss! Kolom 'kanji' atau 'arti' di excel lu ada yang kosong.");
+                    return;
+                }
+
+                soalKuis = acak(soalKuis); soalSekarang = 0; skor = 0; salahList = [];
+                
+                let gui = document.getElementById('game-ui');
+                if(gui) {
+                    if(modeGame === 'sprint' || modeGame === 'survival') {
+                        gui.style.display = 'block';
+                        let ak = document.getElementById('avatar-kanan');
+                        let al = document.getElementById('avatar-kiri');
+                        if(ak) ak.src = `${playerUtama || 'aksa'}-normal.png`;
+                        if(al) al.src = `${playerLawan || 'anggun'}-normal.png`;
+                        bellyPos = 50; bellyScaleX = -1; updateBelly();
+                        gameInterval = setInterval(gameLoop, 1000); 
+                    } else { 
+                        gui.style.display = 'none'; 
+                    }
+                }
+
+                tampilSoal();
+                pindahScreen('screen-play'); 
+                
+            } catch(err) {
+                alert("Mesin nabrak error pas mulai boss: " + err.message);
             }
-            
-            let btnBawah = document.getElementById('btn-bawah');
-            btnBawah.innerText = "keluar game";
-            btnBawah.onclick = quitGame;
-            
-            if(modeGame === 'flashcard') {
-                flashcards = acak([...filteredData]);
-                fcIndex = 0;
-                pindahScreen('screen-flashcard');
-                tampilFlashcard();
-                return;
-            }
-
-            soalKuis = [];
-            filteredData.forEach(k => {
-                soalKuis.push({ tipe: 'arti', kanji: k.kanji, furigana: k.cara_baca, arti: k.arti, bener: k.arti, opsi: acak([k.arti, ...cariPengecoh(k.arti, 'arti')]) });
-                soalKuis.push({ tipe: 'jepang', tanya: `bhs jepangnya:<br><b style="font-size:22px;">"${k.arti}"</b>`, bener: k.kanji, opsi: acak([k.kanji, ...cariPengecoh(k.kanji, 'kanji')]) });
-            });
-
-            soalKuis = acak(soalKuis); soalSekarang = 0; skor = 0; salahList = [];
-            
-            if(modeGame === 'sprint' || modeGame === 'survival') {
-                document.getElementById('game-ui').style.display = 'block';
-                document.getElementById('avatar-kanan').src = `${playerUtama}-normal.png`;
-                document.getElementById('avatar-kiri').src = `${playerLawan}-normal.png`;
-                bellyPos = 50; bellyScaleX = -1; updateBelly();
-                gameInterval = setInterval(gameLoop, 1000); 
-            } else { document.getElementById('game-ui').style.display = 'none'; }
-
-            pindahScreen('screen-play'); tampilSoal();
         }
 
-        // LOGIKA PENGECOH YANG DIJAMIN AMAN
+        function acak(arr) { return arr.sort(() => Math.random() - 0.5); }
+        
         function cariPengecoh(jawabanBener, kolom) {
             if(!filteredData || filteredData.length === 0) return ["A", "B", "C"];
             let kumpul = filteredData.map(k => k[kolom]).filter(v => v && v !== jawabanBener);
@@ -777,7 +811,10 @@
         function confirmQuitYes() {
             maininSound('sfx-click'); isGameOver = true;
             document.getElementById('custom-confirm').style.display = 'none';
-            document.getElementById('low-hp-vignette').classList.remove('low-hp-on'); document.getElementById('sfx-heartbeat').pause();
+            let vignet = document.getElementById('low-hp-vignette');
+            if(vignet) vignet.classList.remove('low-hp-on');
+            let hb = document.getElementById('sfx-heartbeat');
+            if(hb) hb.pause();
             document.getElementById('popup-marah').style.display = 'none'; document.getElementById('popup-senyum').style.display = 'none';
             document.getElementById('flash-overlay').style.backgroundColor = 'transparent'; document.getElementById('bottom-controls').style.display = 'none';
             kembaliKeHomeDariBab(); 
@@ -793,13 +830,20 @@
         function updateBelly() {
             if(bellyPos < 0) bellyPos = 0; if(bellyPos > 100) bellyPos = 100;
             let iconBelly = document.getElementById('belly-pos');
-            iconBelly.style.left = `calc(40px + calc(100% - 80px) * ${bellyPos / 100})`;
-            iconBelly.style.transform = `translate(-50%, -80%) scaleX(${bellyScaleX})`;
-            let love = document.getElementById('love-icon'); love.style.left = bellyPos > 50 ? "100%" : "0%"; 
+            if(iconBelly) {
+                iconBelly.style.left = `calc(40px + calc(100% - 80px) * ${bellyPos / 100})`;
+                iconBelly.style.transform = `translate(-50%, -80%) scaleX(${bellyScaleX})`;
+            }
+            let love = document.getElementById('love-icon'); 
+            if(love) love.style.left = bellyPos > 50 ? "100%" : "0%"; 
             let vignet = document.getElementById('low-hp-vignette'); let hb = document.getElementById('sfx-heartbeat');
             if((modeGame === 'sprint' || modeGame === 'survival') && bellyPos <= 20 && bellyPos > 0 && !isGameOver) {
-                vignet.classList.add('low-hp-on'); if(hb.paused) hb.play().catch(e=>{});
-            } else { vignet.classList.remove('low-hp-on'); hb.pause(); }
+                if(vignet) vignet.classList.add('low-hp-on'); 
+                if(hb && hb.paused) hb.play().catch(e=>{});
+            } else { 
+                if(vignet) vignet.classList.remove('low-hp-on'); 
+                if(hb) hb.pause(); 
+            }
         }
 
         function tampilSoal() {
@@ -898,7 +942,8 @@
             document.getElementById('review-salah').innerHTML = htmlReview;
         }
 
-        // FUNGSI GANTI LAYAR ANTI OVERLAP
+        function kembaliHome() { maininSound('sfx-click'); crossfadeBGM('siang'); gantiBackground(bgSiangPlayer); pindahScreen('screen-home'); }
+
         function pindahScreen(idTarget) {
             if(idTarget === 'screen-home' && document.getElementById('sapaan-home').innerText !== "") { document.getElementById('ui-vinyl').style.display = 'flex'; } 
             else { document.getElementById('ui-vinyl').style.display = 'none'; }
@@ -912,21 +957,11 @@
                     current.classList.remove('active-screen'); current.style.display = 'none';
                     
                     target.style.display = 'flex'; 
-                    if(idTarget === 'screen-flashcard') {
-                        target.style.flexDirection = 'column'; 
-                        target.style.justifyContent = 'center'; 
-                        target.style.alignItems = 'center';
-                    }
                     void target.offsetWidth; 
                     target.classList.add('active-screen'); target.style.opacity = '1'; target.style.transform = 'scale(1) translateY(0)';
                 }, 400);
             } else if(!current || current.id !== idTarget) {
                 target.style.display = 'flex'; 
-                if(idTarget === 'screen-flashcard') {
-                    target.style.flexDirection = 'column'; 
-                    target.style.justifyContent = 'center'; 
-                    target.style.alignItems = 'center';
-                }
                 void target.offsetWidth;
                 target.classList.add('active-screen'); target.style.opacity = '1'; target.style.transform = 'scale(1) translateY(0)';
             }
