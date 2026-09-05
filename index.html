@@ -18,6 +18,8 @@
             overflow: hidden; overscroll-behavior: none;
         }
 
+        @supports (height: 100dvh) { html, body { height: 100dvh; min-height: 100dvh; } }
+
         #layer-belakang { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -10; pointer-events: none; overflow: hidden; background: #1a1a2e; }
 
         .bg-blur { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; object-fit: cover; object-position: center; filter: blur(20px) brightness(0.4); transition: opacity 1s ease-in-out; will-change: opacity; }
@@ -29,12 +31,11 @@
         .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.15); z-index: 2; pointer-events: none;}
         .low-hp-vignette { position: absolute; top:0; left:0; right:0; bottom:0; z-index: 3; pointer-events: none; opacity: 0; transition: opacity 0.5s; box-shadow: inset 0 0 80px rgba(255,0,0,0.8); }
         
-        /* WADAH UTAMA: Dikasih display flex biar app-container di dalemnya bisa melar 100% */
-        .scroll-area { position: absolute; inset: 0; z-index: 10; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        /* FIX MUTLAK TENGAH LAYAR: scroll-area jadi block biasa, app-container ditarik pake min-height: 100dvh */
+        .scroll-area { position: absolute; inset: 0; z-index: 10; overflow-y: auto; overflow-x: hidden; display: block; -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .scroll-area::-webkit-scrollbar { display: none; }
 
-        /* WADAH DALEM: flex-grow narik 100% tinggi wadah luar, langsung nengahin isinya */
-        .app-container { width: 100%; max-width: 480px; padding: 20px; margin: 0 auto; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        .app-container { width: 100%; max-width: 480px; padding: 20px 20px 80px 20px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
         
         .bottom-controls { position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; z-index: 50; pointer-events: auto; }
         
@@ -105,9 +106,8 @@
         .popup-img { max-width: 90%; max-height: 65%; width: auto; object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* TENGAH LAYAR MUTLAK: pake kombinasi margin: auto biar selalu dicenter sama flex parentnya */
-        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); margin: auto 0; }
-        .active-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 1; transform: scale(1) translateY(0); }
+        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .active-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 1; transform: scale(1) translateY(0); width: 100%; }
         
         .bab-scroll-container { display: flex; overflow-x: auto; gap: 10px; padding: 10px 5px; margin-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; position: relative; z-index: 2; width: 100%; }
         .bab-scroll-container::-webkit-scrollbar { display: none; }
@@ -115,7 +115,7 @@
         .bab-scroll-container label:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
         .bab-scroll-container input { margin-right: 5px; }
 
-        #screen-result { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-top: 20px; padding-bottom: 20px; height: 100%; width: 100%; }
+        #screen-result { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-top: 20px; padding-bottom: 20px; height: 100%; width: 100%; min-height: 80vh; }
         .result-header { width: 100%; text-align: center; margin-top: 0; margin-bottom: auto; }
         .result-footer { width: 100%; display: flex; flex-direction: column; justify-content: flex-end; margin-top: auto; margin-bottom: 0; }
         .result-body { width: 100%; max-height: 40vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; margin-top: 10px; }
