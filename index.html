@@ -18,8 +18,6 @@
             overflow: hidden; overscroll-behavior: none;
         }
 
-        @supports (height: 100dvh) { html, body { height: 100dvh; min-height: 100dvh; } }
-
         #layer-belakang { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -10; pointer-events: none; overflow: hidden; background: #1a1a2e; }
 
         .bg-blur { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; object-fit: cover; object-position: center; filter: blur(20px) brightness(0.4); transition: opacity 1s ease-in-out; will-change: opacity; }
@@ -31,11 +29,10 @@
         .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.15); z-index: 2; pointer-events: none;}
         .low-hp-vignette { position: absolute; top:0; left:0; right:0; bottom:0; z-index: 3; pointer-events: none; opacity: 0; transition: opacity 0.5s; box-shadow: inset 0 0 80px rgba(255,0,0,0.8); }
         
-        /* FIX TENGAH LAYAR MUTLAK: Flexbox bersarang penuh */
-        .scroll-area { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .scroll-area { position: absolute; inset: 0; z-index: 10; overflow-y: auto; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .scroll-area::-webkit-scrollbar { display: none; }
 
-        .app-container { width: 100%; max-width: 480px; padding: 20px; margin: 0 auto; flex: 1 0 auto; min-height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        .app-container { width: 100%; max-width: 480px; padding: 20px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
         
         .bottom-controls { position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; z-index: 50; pointer-events: auto; }
         
@@ -104,8 +101,7 @@
         .popup-img { max-width: 90%; max-height: 65%; width: auto; object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* MURNI TENGAH: Hilangkan margin mutlak */
-        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); margin: 0; }
         .active-screen { display: flex; flex-direction: column; justify-content: center; opacity: 1; transform: scale(1) translateY(0); }
         
         .bab-scroll-container { display: flex; overflow-x: auto; gap: 10px; padding: 10px 5px; margin-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; position: relative; z-index: 2; width: 100%; }
@@ -114,7 +110,6 @@
         .bab-scroll-container label:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
         .bab-scroll-container input { margin-right: 5px; }
 
-        /* RESULT KAGA DIUBAH POSISINYA, TETEP PLONG */
         #screen-result { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-top: 20px; padding-bottom: 20px; height: 100%; width: 100%; }
         .result-header { width: 100%; text-align: center; margin-top: 0; margin-bottom: auto; }
         .result-footer { width: 100%; display: flex; flex-direction: column; justify-content: flex-end; margin-top: auto; margin-bottom: 0; }
@@ -246,7 +241,7 @@
         </div>
 
         <div class="scroll-area">
-            <div class="app-container">
+            <div class="app-container" id="app-container">
                 <div id="screen-login" class="screen">
                     <div class="glass-box">
                         <h1>おかえり！</h1>
@@ -415,10 +410,20 @@
         let bgSiangPlayer = 'siang'; 
         let ttsJepangText = "";
 
+        window.globalSpeechUtterance = null;
         let progress = 0;
         let loadInterval;
 
+        function pantekTengahLayar() {
+            let wadah = document.getElementById('app-container');
+            if(wadah) wadah.style.minHeight = window.innerHeight + 'px';
+        }
+
+        window.addEventListener('resize', pantekTengahLayar);
+        window.addEventListener('orientationchange', pantekTengahLayar);
+
         document.addEventListener("DOMContentLoaded", () => {
+            pantekTengahLayar();
             const preloadImages = [
                 'aksa-normal.png', 'aksa-senyum.png', 'aksa-marah.png', 'aksa-peluk-belly.png',
                 'anggun-normal.png', 'anggun-senyum.png', 'anggun-marah.png', 'anggun-peluk-belly.png',
@@ -440,6 +445,7 @@
         });
 
         window.onload = () => {
+            pantekTengahLayar();
             let loadingBar = document.getElementById('load-bar');
             let loadingText = document.getElementById('load-text');
             let bellyLoad = document.getElementById('belly-load');
@@ -474,6 +480,7 @@
                     document.getElementById('loading-screen').style.display = 'none';
                     let loginScreen = document.getElementById('screen-login');
                     loginScreen.style.display = 'flex';
+                    pantekTengahLayar();
                     setTimeout(()=> { loginScreen.classList.add('active-screen'); }, 50);
                 }, 800);
             }, 500);
@@ -488,7 +495,6 @@
             }
         }
 
-        /* PERBAIKAN MUTLAK VOICEOVER TTS: Hapus fungsi cancel & pancingan kosong yang mematikan API Chrome/iOS */
         function bunyiVoice(e) {
             e.stopPropagation(); 
             if(!ttsJepangText) return;
@@ -597,6 +603,11 @@
             maininSound('sfx-click');
             let nama = document.getElementById('input-nama').value.toLowerCase().trim();
             if(!nama) return alert("isi nama dulu boss!");
+            
+            if ('speechSynthesis' in window) {
+                let unlockVoice = new SpeechSynthesisUtterance('');
+                window.speechSynthesis.speak(unlockVoice);
+            }
             
             if(nama === "anggun") { playerUtama = "anggun"; playerLawan = "aksa"; bgSiangPlayer = 'siang-swap'; } 
             else if (nama === "aksa" || nama === "nanda" || nama === "ananda") { playerUtama = "aksa"; playerLawan = "anggun"; bgSiangPlayer = 'siang'; } 
