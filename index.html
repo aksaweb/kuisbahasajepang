@@ -29,10 +29,12 @@
         .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.15); z-index: 2; pointer-events: none;}
         .low-hp-vignette { position: absolute; top:0; left:0; right:0; bottom:0; z-index: 3; pointer-events: none; opacity: 0; transition: opacity 0.5s; box-shadow: inset 0 0 80px rgba(255,0,0,0.8); }
         
-        .scroll-area { position: absolute; inset: 0; z-index: 10; overflow-y: auto; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        /* WADAH UTAMA: Dikasih display flex biar app-container di dalemnya bisa melar 100% */
+        .scroll-area { position: absolute; inset: 0; z-index: 10; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .scroll-area::-webkit-scrollbar { display: none; }
 
-        .app-container { width: 100%; max-width: 480px; padding: 20px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        /* WADAH DALEM: flex-grow narik 100% tinggi wadah luar, langsung nengahin isinya */
+        .app-container { width: 100%; max-width: 480px; padding: 20px; margin: 0 auto; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
         
         .bottom-controls { position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; z-index: 50; pointer-events: auto; }
         
@@ -78,7 +80,9 @@
         ruby { font-size: 28px; font-weight: 900; color: #ffeb3b; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
         rt { font-size: 14px; color: #fff; }
 
-        #game-ui { margin-bottom: 25px; padding: 0 25px; position: relative; width: 100%; } 
+        /* PELINDUNG AVATAR: margin-top ditambah biar avatar dan bubble roasting GA MUNGKIN kepotong atas */
+        #game-ui { margin-top: 70px; margin-bottom: 25px; padding: 0 25px; position: relative; width: 100%; } 
+        
         .bar-container { width: 100%; height: 28px; background: rgba(0,0,0,0.5); border-radius: 15px; position: relative; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .midpoint { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.2); z-index: 1; }
         .avatar-bar { width: 60px; height: 60px; object-fit: cover; aspect-ratio: 1/1; border-radius: 50%; border: 3px solid rgba(255,255,255,0.8); position: absolute; top: 50%; z-index: 3; box-shadow: 0 4px 15px rgba(0,0,0,0.7); background-color: #1a1a2e; }
@@ -101,8 +105,9 @@
         .popup-img { max-width: 90%; max-height: 65%; width: auto; object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); margin: 0; }
-        .active-screen { display: flex; flex-direction: column; justify-content: center; opacity: 1; transform: scale(1) translateY(0); }
+        /* TENGAH LAYAR MUTLAK: pake kombinasi margin: auto biar selalu dicenter sama flex parentnya */
+        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); margin: auto 0; }
+        .active-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 1; transform: scale(1) translateY(0); }
         
         .bab-scroll-container { display: flex; overflow-x: auto; gap: 10px; padding: 10px 5px; margin-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; position: relative; z-index: 2; width: 100%; }
         .bab-scroll-container::-webkit-scrollbar { display: none; }
@@ -414,16 +419,7 @@
         let progress = 0;
         let loadInterval;
 
-        function pantekTengahLayar() {
-            let wadah = document.getElementById('app-container');
-            if(wadah) wadah.style.minHeight = window.innerHeight + 'px';
-        }
-
-        window.addEventListener('resize', pantekTengahLayar);
-        window.addEventListener('orientationchange', pantekTengahLayar);
-
         document.addEventListener("DOMContentLoaded", () => {
-            pantekTengahLayar();
             const preloadImages = [
                 'aksa-normal.png', 'aksa-senyum.png', 'aksa-marah.png', 'aksa-peluk-belly.png',
                 'anggun-normal.png', 'anggun-senyum.png', 'anggun-marah.png', 'anggun-peluk-belly.png',
@@ -445,7 +441,6 @@
         });
 
         window.onload = () => {
-            pantekTengahLayar();
             let loadingBar = document.getElementById('load-bar');
             let loadingText = document.getElementById('load-text');
             let bellyLoad = document.getElementById('belly-load');
@@ -480,7 +475,6 @@
                     document.getElementById('loading-screen').style.display = 'none';
                     let loginScreen = document.getElementById('screen-login');
                     loginScreen.style.display = 'flex';
-                    pantekTengahLayar();
                     setTimeout(()=> { loginScreen.classList.add('active-screen'); }, 50);
                 }, 800);
             }, 500);
@@ -505,6 +499,7 @@
                 u.lang = 'ja-JP'; 
                 u.rate = 0.8;
                 
+                window.globalSpeechUtterance = u;
                 window.speechSynthesis.speak(u);
             } else {
                 alert("Browser lu ga support fitur suara boss.");
