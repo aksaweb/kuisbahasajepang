@@ -31,11 +31,11 @@
         .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.15); z-index: 2; pointer-events: none;}
         .low-hp-vignette { position: absolute; top:0; left:0; right:0; bottom:0; z-index: 3; pointer-events: none; opacity: 0; transition: opacity 0.5s; box-shadow: inset 0 0 80px rgba(255,0,0,0.8); }
         
-        /* FIX TENGAH LAYAR MUTLAK: flex-grow paksa wadah mekar 100% dari detik pertama (bypass iOS min-height bug) */
+        /* FIX TENGAH LAYAR MUTLAK: Flexbox bersarang penuh */
         .scroll-area { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .scroll-area::-webkit-scrollbar { display: none; }
 
-        .app-container { width: 100%; max-width: 480px; padding: 20px; margin: 0 auto; flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        .app-container { width: 100%; max-width: 480px; padding: 20px; margin: 0 auto; flex: 1 0 auto; min-height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
         
         .bottom-controls { position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; z-index: 50; pointer-events: auto; }
         
@@ -104,8 +104,8 @@
         .popup-img { max-width: 90%; max-height: 65%; width: auto; object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* LAYAR TENGAH NORMAL */
-        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); margin: 0; }
+        /* MURNI TENGAH: Hilangkan margin mutlak */
+        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
         .active-screen { display: flex; flex-direction: column; justify-content: center; opacity: 1; transform: scale(1) translateY(0); }
         
         .bab-scroll-container { display: flex; overflow-x: auto; gap: 10px; padding: 10px 5px; margin-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; position: relative; z-index: 2; width: 100%; }
@@ -114,8 +114,8 @@
         .bab-scroll-container label:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
         .bab-scroll-container input { margin-right: 5px; }
 
-        /* RESULT SCREEN DIBIKIN FULL 100% WADAH SECARA ALAMI */
-        #screen-result { margin: 0; display: flex; flex-direction: column; justify-content: space-between; padding-top: 20px; padding-bottom: 20px; min-height: 80vh; width: 100%; }
+        /* RESULT KAGA DIUBAH POSISINYA, TETEP PLONG */
+        #screen-result { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-top: 20px; padding-bottom: 20px; height: 100%; width: 100%; }
         .result-header { width: 100%; text-align: center; margin-top: 0; margin-bottom: auto; }
         .result-footer { width: 100%; display: flex; flex-direction: column; justify-content: flex-end; margin-top: auto; margin-bottom: 0; }
         .result-body { width: 100%; max-height: 40vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; margin-top: 10px; }
@@ -415,9 +415,6 @@
         let bgSiangPlayer = 'siang'; 
         let ttsJepangText = "";
 
-        // Penahanan Memory TTS Anti GC Apple
-        window.globalSpeechUtterance = null;
-
         let progress = 0;
         let loadInterval;
 
@@ -491,23 +488,17 @@
             }
         }
 
-        /* FUNGSI MUTLAK SUARA TTS FLASHCARD */
+        /* PERBAIKAN MUTLAK VOICEOVER TTS: Hapus fungsi cancel & pancingan kosong yang mematikan API Chrome/iOS */
         function bunyiVoice(e) {
             e.stopPropagation(); 
             if(!ttsJepangText) return;
             
             if ('speechSynthesis' in window) {
-                // Tendang antrean macet sebelum nyalain
-                window.speechSynthesis.cancel();
-                
-                // Paksa wujud teks menjadi String agar dikenali mesin pembaca
                 let textDibaca = String(ttsJepangText);
                 let u = new SpeechSynthesisUtterance(textDibaca);
                 u.lang = 'ja-JP'; 
                 u.rate = 0.8;
                 
-                // Ikat ke memory window
-                window.globalSpeechUtterance = u;
                 window.speechSynthesis.speak(u);
             } else {
                 alert("Browser lu ga support fitur suara boss.");
@@ -606,12 +597,6 @@
             maininSound('sfx-click');
             let nama = document.getElementById('input-nama').value.toLowerCase().trim();
             if(!nama) return alert("isi nama dulu boss!");
-            
-            /* PANCINGAN MUTLAK TTS DI AWAL: Buka gembok keamanan suara browser dengan klik valid dari user */
-            if ('speechSynthesis' in window) {
-                let unlockVoice = new SpeechSynthesisUtterance('');
-                window.speechSynthesis.speak(unlockVoice);
-            }
             
             if(nama === "anggun") { playerUtama = "anggun"; playerLawan = "aksa"; bgSiangPlayer = 'siang-swap'; } 
             else if (nama === "aksa" || nama === "nanda" || nama === "ananda") { playerUtama = "aksa"; playerLawan = "anggun"; bgSiangPlayer = 'siang'; } 
@@ -972,12 +957,10 @@
                     current.classList.remove('active-screen'); current.style.display = 'none';
                     
                     target.style.display = 'flex'; 
-                    void target.offsetWidth; 
                     target.classList.add('active-screen'); target.style.opacity = '1'; target.style.transform = 'scale(1) translateY(0)';
                 }, 400);
             } else if(!current || current.id !== idTarget) {
                 target.style.display = 'flex'; 
-                void target.offsetWidth;
                 target.classList.add('active-screen'); target.style.opacity = '1'; target.style.transform = 'scale(1) translateY(0)';
             }
         }
