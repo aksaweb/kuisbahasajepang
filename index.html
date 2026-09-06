@@ -18,6 +18,8 @@
             overflow: hidden; overscroll-behavior: none;
         }
 
+        @supports (height: 100dvh) { html, body { height: 100dvh; min-height: 100dvh; } }
+
         #layer-belakang { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -10; pointer-events: none; overflow: hidden; background: #1a1a2e; }
 
         .bg-blur { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; object-fit: cover; object-position: center; filter: blur(20px) brightness(0.4); transition: opacity 1s ease-in-out; will-change: opacity; }
@@ -29,27 +31,28 @@
         .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.15); z-index: 2; pointer-events: none;}
         .low-hp-vignette { position: absolute; top:0; left:0; right:0; bottom:0; z-index: 3; pointer-events: none; opacity: 0; transition: opacity 0.5s; box-shadow: inset 0 0 80px rgba(255,0,0,0.8); }
         
+        /* WADAH LUAR: Murni Block Biasa, Bebas Scroll, Gak Bentrok */
         .scroll-area { position: absolute; inset: 0; z-index: 10; overflow-y: auto; overflow-x: hidden; display: block; -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .scroll-area::-webkit-scrollbar { display: none; }
 
-        .app-container { width: 100%; max-width: 480px; padding: 100px 20px 80px 20px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        /* WADAH DALEM: Padding Normal 20px, Tinggi Mutlak 100dvh, Center Alami */
+        .app-container { width: 100%; max-width: 480px; padding: 20px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
         
         .bottom-controls { position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; z-index: 50; pointer-events: auto; }
         
         .btn-minimal { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 1; position: relative;}
         .btn-minimal:hover { background: rgba(255,255,255,0.6); color: #fff; transform: translateY(-2px); border-color: rgba(255,255,255,0.5); }
 
-        @keyframes iosRepaint { 0% { transform: scale(1); } 100% { transform: scale(1.0001); } }
-
-        .glass-box { position: relative; width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate; }
+        /* KACA GLASSMORPH: Animasi perusak hitbox dibuang, diganti translateZ biar sensor sentuh ngunci */
+        .glass-box { position: relative; width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); overflow: hidden; z-index: 1; transform: translateZ(0); }
         .glass-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); z-index: -1; border-radius: 20px;}
         .glass-box::after { content: ""; position: absolute; top: -50%; left: -100%; width: 50%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%); transform: skewX(-20deg); animation: lightSweep 6s infinite; pointer-events: none; z-index: 0; }
         @keyframes lightSweep { 0% { left: -100%; } 20%, 100% { left: 200%; } }
 
-        #question-box { position: relative; width: 100%; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 1; transform: scale(1) translateY(0); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
+        #question-box { position: relative; width: 100%; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 1; transform: translateY(0); overflow: hidden; z-index: 1; transform: translateZ(0);}
         #question-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 20px; z-index: -1; }
         
-        .review-box { position: relative; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); z-index: 1; animation: iosRepaint 0.5s infinite alternate;}
+        .review-box { position: relative; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); z-index: 1; transform: translateZ(0);}
         .review-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 10px; z-index: -1; }
         
         h1, h2, h3 { text-align: center; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); position: relative; z-index: 2;}
@@ -78,7 +81,8 @@
         ruby { font-size: 28px; font-weight: 900; color: #ffeb3b; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
         rt { font-size: 14px; color: #fff; }
 
-        #game-ui { margin-bottom: 30px; padding: 0 25px; position: relative; width: 100%; } 
+        /* PELINDUNG AVATAR: margin-top 50px doang biar aman dari atap */
+        #game-ui { margin-top: 50px; margin-bottom: 25px; padding: 0 25px; position: relative; width: 100%; } 
         
         .bar-container { width: 100%; height: 28px; background: rgba(0,0,0,0.5); border-radius: 15px; position: relative; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .midpoint { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.2); z-index: 1; }
@@ -86,8 +90,8 @@
         .avatar-left { left: 0%; transform: translate(-50%, -50%); } 
         .avatar-right { left: 100%; transform: translate(-50%, -50%); } 
 
-        .chat-bubble { position: absolute; top: -35px; background: rgba(255,255,255,0.9); color: #000; padding: 5px 12px; border-radius: 12px; font-weight: 900; font-size: 12px; opacity: 0; transform: translateY(10px) scale(0.8); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 5; pointer-events: none; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .bubble-show { opacity: 1; transform: translateY(0) scale(1); }
+        .chat-bubble { position: absolute; top: -35px; background: rgba(255,255,255,0.9); color: #000; padding: 5px 12px; border-radius: 12px; font-weight: 900; font-size: 12px; opacity: 0; transform: translateY(10px); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 5; pointer-events: none; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .bubble-show { opacity: 1; transform: translateY(0); }
         .chat-left { left: -15px; } .chat-right { right: -15px; }
 
         .love-icon { position: absolute; top: -65px; width: 50px; height: auto; transition: left 0.4s ease-in-out; z-index: 4; mix-blend-mode: screen; transform: translateX(-50%); }
@@ -102,8 +106,9 @@
         .popup-img { max-width: 90%; max-height: 65%; width: auto; object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        .screen { display: none; width: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); margin: auto 0; }
-        .active-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 1; transform: scale(1) translateY(0); width: 100%; }
+        /* Layar Utama */
+        .screen { display: none; width: 100%; opacity: 0; transform: translateY(15px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .active-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 1; transform: translateY(0); width: 100%; }
         
         .bab-scroll-container { display: flex; overflow-x: auto; gap: 10px; padding: 10px 5px; margin-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; position: relative; z-index: 2; width: 100%; }
         .bab-scroll-container::-webkit-scrollbar { display: none; }
@@ -111,16 +116,8 @@
         .bab-scroll-container label:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
         .bab-scroll-container input { margin-right: 5px; }
 
-        /* BYPASS BANTALAN: Pakai negative margin biar layar result mekar nembus 100% ke atap dan lantai */
-        #screen-result { 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-            margin: -100px -20px -80px -20px !important; 
-            padding: 40px 20px 30px 20px; 
-            width: calc(100% + 40px) !important; 
-            min-height: 100dvh; 
-        }
+        /* Layar Result: Mekar normal sampe mentok tanpa trik margin negatif */
+        #screen-result { display: flex; flex-direction: column; justify-content: space-between; padding-top: 10px; padding-bottom: 10px; height: 100%; width: 100%; min-height: 85vh; }
         .result-header { width: 100%; text-align: center; margin-top: 0; margin-bottom: auto; }
         .result-footer { width: 100%; display: flex; flex-direction: column; justify-content: flex-end; margin-top: auto; margin-bottom: 0; }
         .result-body { width: 100%; max-height: 40vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; margin-top: 10px; }
@@ -165,7 +162,7 @@
         #fc-glass-flipper { position: absolute; inset: 0; z-index: 1; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-origin: center; }
         #fc-glass-flipper.is-flipped { transform: scaleX(-1); }
 
-        .fc-glass-bg { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); animation: iosRepaint 0.5s infinite alternate; overflow: hidden; }
+        .fc-glass-bg { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); transform: translateZ(0); overflow: hidden; }
         .fc-glass-bg::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 20px; z-index: -1; }
         
         .fc-scene { position: relative; width: 100%; height: 100%; perspective: 1000px; z-index: 2; }
@@ -892,7 +889,7 @@
                 
                 flashOver.style.backgroundColor = "rgba(0, 255, 100, 0.6)"; document.getElementById('img-senyum').src = `${playerLawan}-senyum.png`; document.getElementById('popup-senyum').style.display = 'flex';
                 setTimeout(() => {
-                    if(!isGameOver) { flashOver.style.backgroundColor = "transparent"; document.getElementById('popup-senyum').style.display = 'none'; qBox.style.opacity = '0'; qBox.style.transform = 'scale(0.95) translateY(15px)'; setTimeout(() => { lanjutSoal(); }, 600); }
+                    if(!isGameOver) { flashOver.style.backgroundColor = "transparent"; document.getElementById('popup-senyum').style.display = 'none'; qBox.style.opacity = '0'; qBox.style.transform = 'translateY(15px)'; setTimeout(() => { lanjutSoal(); }, 600); }
                 }, 1000); 
             } else {
                 combo = 0; salahList.push({ tanya: soal.tipe==='arti'? soal.kanji : soal.tanya, milih: jawab, benernya: soal.bener }); maininSound('sfx-wrong');
@@ -902,7 +899,7 @@
                 document.getElementById('img-marah').src = `${playerLawan}-marah.png`; document.getElementById('popup-marah').style.display = 'flex';
                 
                 setTimeout(() => {
-                    if(!isGameOver) { w.classList.remove('shake'); flashOver.style.backgroundColor = "transparent"; document.getElementById('popup-marah').style.display = 'none'; qBox.style.opacity = '0'; qBox.style.transform = 'scale(0.95) translateY(15px)'; setTimeout(() => { lanjutSoal(); }, 600); }
+                    if(!isGameOver) { w.classList.remove('shake'); flashOver.style.backgroundColor = "transparent"; document.getElementById('popup-marah').style.display = 'none'; qBox.style.opacity = '0'; qBox.style.transform = 'translateY(15px)'; setTimeout(() => { lanjutSoal(); }, 600); }
                 }, 1000);
             }
         }
@@ -910,7 +907,7 @@
         function lanjutSoal() {
             if(isGameOver) return;
             soalSekarang++; let qBox = document.getElementById('question-box');
-            if(soalSekarang < soalKuis.length) { tampilSoal(); qBox.style.opacity = '1'; qBox.style.transform = 'scale(1) translateY(0)'; } 
+            if(soalSekarang < soalKuis.length) { tampilSoal(); qBox.style.opacity = '1'; qBox.style.transform = 'translateY(0)'; } 
             else {
                 if(modeGame === 'quiz' || modeGame === 'survival') gameOver(true); else if(modeGame === 'sprint') { if (bellyPos > 50) gameOver(true); else gameOver(false); }
             }
@@ -963,16 +960,16 @@
             let target = document.getElementById(idTarget);
 
             if(current && current.id !== idTarget) {
-                current.style.opacity = '0'; current.style.transform = 'scale(0.95) translateY(10px)';
+                current.style.opacity = '0'; current.style.transform = 'translateY(15px)';
                 setTimeout(() => {
                     current.classList.remove('active-screen'); current.style.display = 'none';
                     
                     target.style.display = 'flex'; 
-                    target.classList.add('active-screen'); target.style.opacity = '1'; target.style.transform = 'scale(1) translateY(0)';
+                    target.classList.add('active-screen'); target.style.opacity = '1'; target.style.transform = 'translateY(0)';
                 }, 400);
             } else if(!current || current.id !== idTarget) {
                 target.style.display = 'flex'; 
-                target.classList.add('active-screen'); target.style.opacity = '1'; target.style.transform = 'scale(1) translateY(0)';
+                target.classList.add('active-screen'); target.style.opacity = '1'; target.style.transform = 'translateY(0)';
             }
         }
     </script>
