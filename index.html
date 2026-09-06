@@ -31,28 +31,30 @@
         .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.15); z-index: 2; pointer-events: none;}
         .low-hp-vignette { position: absolute; top:0; left:0; right:0; bottom:0; z-index: 3; pointer-events: none; opacity: 0; transition: opacity 0.5s; box-shadow: inset 0 0 80px rgba(255,0,0,0.8); }
         
-        /* WADAH LUAR: Murni Block Biasa, Bebas Scroll, Gak Bentrok */
+        /* WADAH LUAR: Normal block, gak bentrok sama Flexbox dalem */
         .scroll-area { position: absolute; inset: 0; z-index: 10; overflow-y: auto; overflow-x: hidden; display: block; -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .scroll-area::-webkit-scrollbar { display: none; }
 
-        /* WADAH DALEM: Padding Normal 20px, Tinggi Mutlak 100dvh, Center Alami */
-        .app-container { width: 100%; max-width: 480px; padding: 20px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        /* WADAH DALEM: Padding normal 20px, Flex Column murni, kaga usah di-justify biar kaga nge-bug */
+        .app-container { width: 100%; max-width: 480px; padding: 20px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; position: relative; }
         
         .bottom-controls { position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; z-index: 50; pointer-events: auto; }
         
         .btn-minimal { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 1; position: relative;}
         .btn-minimal:hover { background: rgba(255,255,255,0.6); color: #fff; transform: translateY(-2px); border-color: rgba(255,255,255,0.5); }
 
-        /* KACA GLASSMORPH: Animasi perusak hitbox dibuang, diganti translateZ biar sensor sentuh ngunci */
-        .glass-box { position: relative; width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); overflow: hidden; z-index: 1; transform: translateZ(0); }
+        /* PUSAKA DIKEMBALIKAN: Animasi iosRepaint balik biar GIF di iPhone kaga freeze */
+        @keyframes iosRepaint { 0% { transform: scale(1); } 100% { transform: scale(1.0001); } }
+
+        .glass-box { position: relative; width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate; }
         .glass-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); z-index: -1; border-radius: 20px;}
         .glass-box::after { content: ""; position: absolute; top: -50%; left: -100%; width: 50%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%); transform: skewX(-20deg); animation: lightSweep 6s infinite; pointer-events: none; z-index: 0; }
         @keyframes lightSweep { 0% { left: -100%; } 20%, 100% { left: 200%; } }
 
-        #question-box { position: relative; width: 100%; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 1; transform: translateY(0); overflow: hidden; z-index: 1; transform: translateZ(0);}
+        #question-box { position: relative; width: 100%; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 25px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 1; transform: translateY(0); overflow: hidden; z-index: 1; animation: iosRepaint 0.5s infinite alternate; }
         #question-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 20px; z-index: -1; }
         
-        .review-box { position: relative; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); z-index: 1; transform: translateZ(0);}
+        .review-box { position: relative; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.2); z-index: 1; animation: iosRepaint 0.5s infinite alternate; }
         .review-box::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 10px; z-index: -1; }
         
         h1, h2, h3 { text-align: center; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); position: relative; z-index: 2;}
@@ -81,7 +83,7 @@
         ruby { font-size: 28px; font-weight: 900; color: #ffeb3b; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
         rt { font-size: 14px; color: #fff; }
 
-        /* PELINDUNG AVATAR: margin-top 50px doang biar aman dari atap */
+        /* PELINDUNG AVATAR: tetep 50px biar avatar kaga nyundul atap layar hape lu */
         #game-ui { margin-top: 50px; margin-bottom: 25px; padding: 0 25px; position: relative; width: 100%; } 
         
         .bar-container { width: 100%; height: 28px; background: rgba(0,0,0,0.5); border-radius: 15px; position: relative; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
@@ -106,9 +108,9 @@
         .popup-img { max-width: 90%; max-height: 65%; width: auto; object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* Layar Utama */
+        /* JURUS BERSIH: `margin: auto 0` otomatis narik tiap screen murni ke tengah tanpa ngerusak hitbox tombol */
         .screen { display: none; width: 100%; opacity: 0; transform: translateY(15px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
-        .active-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 1; transform: translateY(0); width: 100%; }
+        .active-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 1; transform: translateY(0); width: 100%; margin: auto 0; }
         
         .bab-scroll-container { display: flex; overflow-x: auto; gap: 10px; padding: 10px 5px; margin-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; position: relative; z-index: 2; width: 100%; }
         .bab-scroll-container::-webkit-scrollbar { display: none; }
@@ -116,8 +118,8 @@
         .bab-scroll-container label:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
         .bab-scroll-container input { margin-right: 5px; }
 
-        /* Layar Result: Mekar normal sampe mentok tanpa trik margin negatif */
-        #screen-result { display: flex; flex-direction: column; justify-content: space-between; padding-top: 10px; padding-bottom: 10px; height: 100%; width: 100%; min-height: 85vh; }
+        /* Layar Result: Mekar normal sampe 85vh tanpa perlu disuntik negative margin perusak */
+        #screen-result { display: flex; flex-direction: column; justify-content: space-between; padding-top: 10px; padding-bottom: 10px; height: 100%; width: 100%; min-height: 85vh; margin: auto 0; }
         .result-header { width: 100%; text-align: center; margin-top: 0; margin-bottom: auto; }
         .result-footer { width: 100%; display: flex; flex-direction: column; justify-content: flex-end; margin-top: auto; margin-bottom: 0; }
         .result-body { width: 100%; max-height: 40vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; margin-top: 10px; }
@@ -162,7 +164,7 @@
         #fc-glass-flipper { position: absolute; inset: 0; z-index: 1; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-origin: center; }
         #fc-glass-flipper.is-flipped { transform: scaleX(-1); }
 
-        .fc-glass-bg { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); transform: translateZ(0); overflow: hidden; }
+        .fc-glass-bg { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); animation: iosRepaint 0.5s infinite alternate; overflow: hidden; }
         .fc-glass-bg::before { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); border-radius: 20px; z-index: -1; }
         
         .fc-scene { position: relative; width: 100%; height: 100%; perspective: 1000px; z-index: 2; }
