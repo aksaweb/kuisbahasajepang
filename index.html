@@ -840,7 +840,7 @@
 
         function mulaiGameNormal() {
             if(babTerpilih.length === 0) {
-                tampilError("Pilih minimal satu bab bossku!");
+                tampilError("Pilih minimal satu BAB!");
                 return;
             }
             maininSound('sfx-click');
@@ -871,7 +871,7 @@
                 if(hb) hb.pause();
                 
                 if(!filteredData || filteredData.length === 0) {
-                    tampilError("Waduh, data kosong di bab yang lu pilih!");
+                    tampilError("Waduh, data kosong di bab yang dipilih!");
                     return;
                 }
                 
