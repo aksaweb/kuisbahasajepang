@@ -237,7 +237,8 @@
         <audio id="sfx-wrong" src="https://assets.mixkit.co/active_storage/sfx/946/946-preview.mp3" preload="auto"></audio>
         <audio id="sfx-win" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
         <audio id="sfx-lose" src="https://assets.mixkit.co/active_storage/sfx/3129/3129-preview.mp3" preload="auto"></audio>
-        <audio id="sfx-flip" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
+        <!-- SFX Flip Kartu Baru yang lebih mantap -->
+        <audio id="sfx-flip" src="https://assets.mixkit.co/active_storage/sfx/2607/2607-preview.mp3" preload="auto"></audio>
 
         <div class="popup-overlay" id="popup-marah"><img src="" class="popup-img" id="img-marah"></div>
         <div class="popup-overlay" id="popup-senyum"><img src="" class="popup-img" id="img-senyum"></div>
@@ -260,6 +261,15 @@
                     <button class="btn" style="background:rgba(255,50,50,0.3); margin:0;" onclick="tutupPopupRandom()">Batal</button>
                     <button class="btn" style="background:rgba(0, 230, 118, 0.3); margin:0;" onclick="prosesRandom()">Mulai</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Popup Flashcard Berhasil Tamat -->
+        <div class="popup-overlay" id="popup-fc-end" style="z-index: 10000; flex-direction: column;">
+            <div class="glass-box" style="text-align: center; max-width: 85%;">
+                <h3 style="color: #ffeb3b; margin-bottom: 10px;">Luar Biasa! 🎉</h3>
+                <p style="font-size: 14px; margin-bottom: 20px; font-weight: normal;">Semua kartu udah hafal di luar kepala bossku!</p>
+                <button class="btn" style="background:rgba(0, 230, 118, 0.3); margin:0;" onclick="tutupPopupFcEnd()">🏠 Beranda</button>
             </div>
         </div>
 
@@ -339,18 +349,18 @@
                             </div>
                             
                             <div class="split-layout">
-                                <!-- Kiri: Buku 2 -->
-                                <div class="book-section">
-                                    <button class="btn-minimal" style="width:100%; margin-bottom:6px; font-size: 11px;" onclick="pilihFullBuku(2)" id="btn-s2">☑️ Pilih S2</button>
-                                    <button class="accordion" onclick="toggleAccordion('grid-s2')">📖 Buku 2</button>
-                                    <div class="accordion-content" id="grid-s2"></div>
-                                </div>
-
-                                <!-- Kanan: Buku 1 -->
+                                <!-- Kiri: Buku 1 -->
                                 <div class="book-section">
                                     <button class="btn-minimal" style="width:100%; margin-bottom:6px; font-size: 11px;" onclick="pilihFullBuku(1)" id="btn-s1">☑️ Pilih S1</button>
                                     <button class="accordion" onclick="toggleAccordion('grid-s1')">📖 Buku 1</button>
                                     <div class="accordion-content" id="grid-s1"></div>
+                                </div>
+                                
+                                <!-- Kanan: Buku 2 -->
+                                <div class="book-section">
+                                    <button class="btn-minimal" style="width:100%; margin-bottom:6px; font-size: 11px;" onclick="pilihFullBuku(2)" id="btn-s2">☑️ Pilih S2</button>
+                                    <button class="accordion" onclick="toggleAccordion('grid-s2')">📖 Buku 2</button>
+                                    <div class="accordion-content" id="grid-s2"></div>
                                 </div>
                             </div>
                             
@@ -504,7 +514,6 @@
             let loadingText = document.getElementById('load-text');
             let bellyLoad = document.getElementById('belly-load');
 
-            // Tarik 2 file secara simultan
             Promise.allSettled([
                 fetch('shokyuu1.xlsx').then(res => { if(!res.ok) throw new Error(); return res.arrayBuffer(); }),
                 fetch('shokyuu2.xlsx').then(res => { if(!res.ok) throw new Error(); return res.arrayBuffer(); })
@@ -515,14 +524,14 @@
                 if(results[0].status === 'fulfilled') {
                     let wb1 = XLSX.read(new Uint8Array(results[0].value), {type: 'array'});
                     let data1 = XLSX.utils.sheet_to_json(wb1.Sheets[wb1.SheetNames[0]]);
-                    data1.forEach(d => { d.buku_internal = 1; dataVocab.push(d); }); // Auto-Tag Buku 1
+                    data1.forEach(d => { d.buku_internal = 1; dataVocab.push(d); });
                     adaData = true;
                 }
                 
                 if(results[1].status === 'fulfilled') {
                     let wb2 = XLSX.read(new Uint8Array(results[1].value), {type: 'array'});
                     let data2 = XLSX.utils.sheet_to_json(wb2.Sheets[wb2.SheetNames[0]]);
-                    data2.forEach(d => { d.buku_internal = 2; dataVocab.push(d); }); // Auto-Tag Buku 2
+                    data2.forEach(d => { d.buku_internal = 2; dataVocab.push(d); });
                     adaData = true;
                 }
 
@@ -553,7 +562,6 @@
             }, 500);
         }
 
-        // Tampil Error Aesthetic Validasi
         function tampilError(pesan) {
             maininSound('sfx-wrong');
             let w = document.getElementById('mobile-wrap');
@@ -930,8 +938,9 @@
 
         function tampilFlashcard() {
             if(flashcards.length === 0) {
-                alert("Semua kartu telah diselesaikan!");
-                return kembaliKeHomeDariBab(); 
+                maininSound('sfx-win');
+                document.getElementById('popup-fc-end').style.display = 'flex';
+                return; 
             }
             
             isFlipped = false;
@@ -954,6 +963,12 @@
             ttsJepangText = data.cara_baca ? data.cara_baca : data.kanji; 
             
             document.getElementById('tts-front').style.display = 'inline-flex';
+        }
+
+        function tutupPopupFcEnd() {
+            maininSound('sfx-click');
+            document.getElementById('popup-fc-end').style.display = 'none';
+            kembaliKeHomeDariBab();
         }
 
         function flipCard() {
