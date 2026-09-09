@@ -196,7 +196,7 @@
 <body>
 
     <div id="loading-screen">
-        <h2 style="color:#ffeb3b; letter-spacing: 2px;">MEMUAT DATA...</h2>
+        <h2 style="color:#ffeb3b; letter-spacing: 2px;">MENYUSUN LATIHAN...</h2>
         <div class="loading-box">
             <img src="belly-lari.gif" id="belly-load" onerror="this.src='icon-love.gif'">
             <div class="progress-bg">
@@ -255,8 +255,8 @@
         <div class="popup-overlay" id="popup-random">
             <div class="glass-box" style="text-align: center; max-width: 80%;">
                 <h3 style="margin-bottom: 15px;">Mode Acak</h3>
-                <p style="font-size:14px; margin-bottom: 15px;">Jumlah kosa kata yang ingin dites:</p>
-                <input type="number" id="input-random-count" placeholder="Contoh: 20">
+                <p style="font-size:14px; margin-bottom: 15px;">Jumlah kosakata yang ingin dites:</p>
+                <input type="number" id="input-random-count" placeholder="Hayo berani berapa?">
                 <div style="display:flex; gap:10px;">
                     <button class="btn" style="background:rgba(255,50,50,0.3); margin:0;" onclick="tutupPopupRandom()">Batal</button>
                     <button class="btn" style="background:rgba(0, 230, 118, 0.3); margin:0;" onclick="prosesRandom()">Mulai</button>
@@ -267,8 +267,8 @@
         <!-- Popup Flashcard Berhasil Tamat -->
         <div class="popup-overlay" id="popup-fc-end" style="z-index: 10000; flex-direction: column;">
             <div class="glass-box" style="text-align: center; max-width: 85%;">
-                <h3 style="color: #ffeb3b; margin-bottom: 10px;">Luar Biasa! 🎉</h3>
-                <p style="font-size: 14px; margin-bottom: 20px; font-weight: normal;">Semua kartu udah hafal di luar kepala bossku!</p>
+                <h3 style="color: #ffeb3b; margin-bottom: 10px;">Kartu Habis! 🎉</h3>
+                <p style="font-size: 14px; margin-bottom: 20px; font-weight: normal;">Semua sisa kartu udah berhasil di hafal!</p>
                 <button class="btn" style="background:rgba(0, 230, 118, 0.3); margin:0;" onclick="tutupPopupFcEnd()">🏠 Beranda</button>
             </div>
         </div>
@@ -285,8 +285,8 @@
                 <div id="screen-login" class="screen">
                     <div class="glass-box">
                         <h1>おかえり！</h1>
-                        <p>Siapa yang sedang bermain?</p>
-                        <input type="text" id="input-nama" placeholder="Ketik nama Anda..." autocomplete="off">
+                        <p>Siapa yang sedang belajar</p>
+                        <input type="text" id="input-nama" placeholder="Ketik nama kamu..." autocomplete="off">
                         <button class="btn" onclick="prosesNama()">Lanjut</button>
                     </div>
                 </div>
@@ -294,7 +294,7 @@
                 <div id="screen-lofi" class="screen">
                     <div class="glass-box">
                         <h3>Satu hal lagi...</h3>
-                        <p style="font-size: 14px;">Aktifkan musik Lo-Fi?</p>
+                        <p style="font-size: 14px;">Mau ditemani musik Lo-Fi?</p>
                         <div style="display:flex; gap:15px; margin-top:20px;">
                             <button class="btn" onclick="ijinAudio(false)" style="background: rgba(255,50,50,0.3);">Tidak</button>
                             <button class="btn" onclick="ijinAudio(true)" style="background: rgba(0, 230, 118, 0.3);">Ya</button>
@@ -328,8 +328,8 @@
                                 
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; position: relative; z-index: 2;">
                                     <button class="btn" style="margin-bottom:0; font-size:14px; background: rgba(255, 235, 59, 0.2); border-color:#ffeb3b;" onclick="bukaScreenBab('flashcard')">Flashcard</button>
-                                    <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('quiz')">Santai</button>
-                                    <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('sprint')">Fokus</button>
+                                    <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('quiz')">Kuis Santai</button>
+                                    <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('sprint')">Kompetitif</button>
                                     <button class="btn" style="margin-bottom:0; font-size:14px;" onclick="bukaScreenBab('survival')">Bertahan</button>
                                 </div>
                             </div>
@@ -351,15 +351,15 @@
                             <div class="split-layout">
                                 <!-- Kiri: Buku 1 -->
                                 <div class="book-section">
-                                    <button class="btn-minimal" style="width:100%; margin-bottom:6px; font-size: 11px;" onclick="pilihFullBuku(1)" id="btn-s1">☑️ Pilih S1</button>
-                                    <button class="accordion" onclick="toggleAccordion('grid-s1')">📖 Buku 1</button>
+                                    <button class="btn-minimal" style="width:100%; margin-bottom:6px; font-size: 11px;" onclick="pilihFullBuku(1)" id="btn-s1">☑️ Centang Semua Buku 1</button>
+                                    <button class="accordion" onclick="toggleAccordion('grid-s1')">📖 Daftar Buku 1</button>
                                     <div class="accordion-content" id="grid-s1"></div>
                                 </div>
                                 
                                 <!-- Kanan: Buku 2 -->
                                 <div class="book-section">
-                                    <button class="btn-minimal" style="width:100%; margin-bottom:6px; font-size: 11px;" onclick="pilihFullBuku(2)" id="btn-s2">☑️ Pilih S2</button>
-                                    <button class="accordion" onclick="toggleAccordion('grid-s2')">📖 Buku 2</button>
+                                    <button class="btn-minimal" style="width:100%; margin-bottom:6px; font-size: 11px;" onclick="pilihFullBuku(2)" id="btn-s2">☑️ Centang Semua Buku 2</button>
+                                    <button class="accordion" onclick="toggleAccordion('grid-s2')">📖 Daftar Buku 2</button>
                                     <div class="accordion-content" id="grid-s2"></div>
                                 </div>
                             </div>
@@ -446,7 +446,7 @@
                             <div id="review-salah"></div>
                         </div>
                         <div class="result-btn-wrap">
-                            <button class="btn" onclick="kembaliHome()">🏠 Kembali ke Home</button>
+                            <button class="btn" onclick="kembaliHome()">🏠 Back to Home</button>
                         </div>
                     </div>
                 </div>
@@ -698,12 +698,12 @@
             
             if(nama === "anggun") { playerUtama = "anggun"; playerLawan = "aksa"; bgSiangPlayer = 'siang-swap'; } 
             else if (nama === "aksa" || nama === "nanda" || nama === "ananda") { playerUtama = "aksa"; playerLawan = "anggun"; bgSiangPlayer = 'siang'; } 
-            else { return tampilError("Nama nggak terdaftar boss!"); }
+            else { return tampilError("lau siape mpruyyy!"); }
 
             maininSound('sfx-click');
             gantiBackground(bgSiangPlayer); 
             let capNama = nama.charAt(0).toUpperCase() + nama.slice(1);
-            document.getElementById('sapaan-home').innerText = `Selamat datang, ${capNama}`;
+            document.getElementById('sapaan-home').innerText = `Selamat belajar, ${capNama}`;
             pindahScreen('screen-lofi');
         }
 
@@ -825,9 +825,9 @@
 
         function prosesRandom() {
             let count = parseInt(document.getElementById('input-random-count').value);
-            if(isNaN(count) || count <= 0) return tampilError("Isi angka yang valid bossku!");
+            if(isNaN(count) || count <= 0) return tampilError("Isi yang bener kocak!");
             if(!dataVocab || dataVocab.length === 0) return tampilError("Data kosa kata belum termuat!");
-            if(count > dataVocab.length) return tampilError(`Soalnya nggak nyampe segitu boss, sisa ${dataVocab.length} doang!`);
+            if(count > dataVocab.length) return tampilError(`Soalnya nggak nyampe segitu kocak, total ${dataVocab.length} doang!`);
             
             maininSound('sfx-click');
             document.getElementById('popup-random').style.display = 'none';
@@ -1088,7 +1088,7 @@
             
             if(jawab === soal.bener) {
                 skor++; combo++; maininSound('sfx-correct'); let bellyJump = 15;
-                if(combo >= 3) { popBubble('kanan', acak(["Mantap!", "Bagus!", "Lanjutkan!"])[0]); bellyJump = 25; }
+                if(combo >= 3) { popBubble('kanan', acak(["Ayang keren jir!", "Pinternya acu!", "Ayangcu nih boss!"])[0]); bellyJump = 25; }
 
                 if(modeGame === 'sprint' || modeGame === 'survival') {
                     bellyPos += bellyJump; if(modeGame === 'survival' && bellyPos > 100) bellyPos = 100; 
@@ -1103,7 +1103,7 @@
                 }, 1000); 
             } else {
                 combo = 0; salahList.push({ tanya: soal.tipe==='arti'? soal.kanji : soal.tanya, milih: jawab, benernya: soal.bener }); maininSound('sfx-wrong');
-                popBubble('kiri', acak(["Kurang tepat", "Coba lagi", "Hati-hati"])[0]); w.classList.add('shake'); flashOver.style.backgroundColor = "rgba(255, 0, 0, 0.6)";
+                popBubble('kiri', acak(["UTUTUTU...", "Yang bener aje yang", "Sini aja belly"])[0]); w.classList.add('shake'); flashOver.style.backgroundColor = "rgba(255, 0, 0, 0.6)";
                 
                 if(modeGame === 'survival') { bellyPos -= 15; updateBelly(); if(bellyPos <= 0) return setTimeout(() => { gameOver(false); }, 1000); }
                 document.getElementById('img-marah').src = `${playerLawan}-marah.png`; document.getElementById('popup-marah').style.display = 'flex';
@@ -1152,10 +1152,10 @@
             document.getElementById('skor-akhir').innerText = `Skor Akhir: ${skor} / ${soalKuis.length}`;
 
             let htmlReview = "";
-            if(salahList.length === 0) { htmlReview = "<p class='benar-text'>Sempurna! Semua jawaban benar.</p>"; } 
+            if(salahList.length === 0) { htmlReview = "<p class='benar-text'>Wih Ayangcuu perfect! Semua jawaban bener.</p>"; } 
             else {
-                htmlReview = "<h3 style='font-size:16px;'>Evaluasi Jawaban Salah:</h3>";
-                salahList.forEach(s => { htmlReview += `<div class="review-box"><p style="margin-bottom:5px; font-weight:bold; font-size:14px;">Soal: ${s.tanya}</p><span class="salah-text" style="font-size:13px;">Jawaban Anda: ${s.milih}</span><br><span class="benar-text" style="font-size:13px;">Jawaban Benar: ${s.benernya}</span></div>`; });
+                htmlReview = "<h3 style='font-size:16px;'>Evaluasi Kesalahan:</h3>";
+                salahList.forEach(s => { htmlReview += `<div class="review-box"><p style="margin-bottom:5px; font-weight:bold; font-size:14px;">Soal: ${s.tanya}</p><span class="salah-text" style="font-size:13px;">Jawaban kamu: ${s.milih}</span><br><span class="benar-text" style="font-size:13px;">Jawaban Benar: ${s.benernya}</span></div>`; });
             }
             document.getElementById('review-salah').innerHTML = htmlReview;
         }
