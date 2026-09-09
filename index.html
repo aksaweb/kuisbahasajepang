@@ -105,7 +105,6 @@
         .screen { display: none; width: 100%; height: 100%; opacity: 0; transform: scale(0.98) translateY(10px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); flex-direction: column; justify-content: center; align-items: center; }
         .active-screen { display: flex; opacity: 1; transform: scale(1) translateY(0); }
         
-        /* LAYOUT BARU UNTUK PILIH BAB (ESTETIK & CLEAN) */
         .global-actions { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 20px; position: relative; z-index: 2; width: 100%; }
         .global-actions .btn-minimal { flex: 1; padding: 10px 5px; font-size: 12px; }
         
@@ -232,7 +231,6 @@
         <div class="low-hp-vignette" id="low-hp-vignette"></div>
 
         <audio id="bgm-player" loop preload="auto"></audio>
-        
         <audio id="sfx-heartbeat" src="https://assets.mixkit.co/active_storage/sfx/2578/2578-preview.mp3" loop preload="auto"></audio>
         <audio id="sfx-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
         <audio id="sfx-correct" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3" preload="auto"></audio>
@@ -256,12 +254,19 @@
         <div class="popup-overlay" id="popup-random">
             <div class="glass-box" style="text-align: center; max-width: 80%;">
                 <h3 style="margin-bottom: 15px;">Mode Acak</h3>
-                <p style="font-size:14px; margin-bottom: 15px;">Jumlah kosakata yang ingin dites:</p>
+                <p style="font-size:14px; margin-bottom: 15px;">Jumlah kosa kata yang ingin dites:</p>
                 <input type="number" id="input-random-count" placeholder="Contoh: 20">
                 <div style="display:flex; gap:10px;">
                     <button class="btn" style="background:rgba(255,50,50,0.3); margin:0;" onclick="tutupPopupRandom()">Batal</button>
                     <button class="btn" style="background:rgba(0, 230, 118, 0.3); margin:0;" onclick="prosesRandom()">Mulai</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Popup Error Validation -->
+        <div class="popup-overlay" id="popup-error" style="z-index: 10000; flex-direction: column;">
+            <div class="glass-box" style="background: rgba(255, 23, 68, 0.2); border-color: #ff1744; text-align: center; max-width: 85%;">
+                <h3 style="color: #fff; margin-bottom: 0; font-size: 16px;" id="error-msg">Error</h3>
             </div>
         </div>
 
@@ -297,8 +302,8 @@
                             </div>
                             
                             <div id="area-upload" style="margin-bottom: 20px; background: rgba(255, 50, 50, 0.3); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,50,50,0.6);">
-                                <p style="font-weight: bold; color: #ffeb3b; margin-bottom: 5px; text-shadow: none;">⚠️ Data Tidak Ditemukan</p>
-                                <p style="font-size: 12px; margin-bottom: 10px; font-weight: normal; color:#fff; text-shadow: none;">Gagal memuat otomatis. Silakan unggah file Excel Anda secara manual:</p>
+                                <p style="font-weight: bold; color: #ffeb3b; margin-bottom: 5px; text-shadow: none;">⚠️ File Excel Tidak Ditemukan</p>
+                                <p style="font-size: 12px; margin-bottom: 10px; font-weight: normal; color:#fff; text-shadow: none;">Gagal memuat file otomatis. Silakan unggah file Excel Anda secara manual:</p>
                                 <input type="file" id="file-excel" accept=".xlsx, .xls">
                             </div>
                             
@@ -328,7 +333,7 @@
                             <h3 style="margin-bottom: 20px; font-size: 18px;">Pilih Bab</h3>
                             
                             <div class="global-actions">
-                                <button class="btn-minimal" onclick="pilihSemuaGlobal()">☑️ Semua</button>
+                                <button class="btn-minimal" onclick="pilihSemuaGlobal()" id="btn-semua">☑️ Semua</button>
                                 <button class="btn-minimal" onclick="hapusSemuaGlobal()">🗑️ Bersih</button>
                                 <button class="btn-minimal" onclick="bukaPopupRandom()">🎲 Acak</button>
                             </div>
@@ -336,14 +341,14 @@
                             <div class="split-layout">
                                 <!-- Kiri: Buku 2 -->
                                 <div class="book-section">
-                                    <button class="btn-minimal" style="width:100%; margin-bottom:6px; font-size: 11px;" onclick="pilihFullBuku(2)">☑️ Pilih S2</button>
+                                    <button class="btn-minimal" style="width:100%; margin-bottom:6px; font-size: 11px;" onclick="pilihFullBuku(2)" id="btn-s2">☑️ Pilih S2</button>
                                     <button class="accordion" onclick="toggleAccordion('grid-s2')">📖 Buku 2</button>
                                     <div class="accordion-content" id="grid-s2"></div>
                                 </div>
 
                                 <!-- Kanan: Buku 1 -->
                                 <div class="book-section">
-                                    <button class="btn-minimal" style="width:100%; margin-bottom:6px; font-size: 11px;" onclick="pilihFullBuku(1)">☑️ Pilih S1</button>
+                                    <button class="btn-minimal" style="width:100%; margin-bottom:6px; font-size: 11px;" onclick="pilihFullBuku(1)" id="btn-s1">☑️ Pilih S1</button>
                                     <button class="accordion" onclick="toggleAccordion('grid-s1')">📖 Buku 1</button>
                                     <div class="accordion-content" id="grid-s1"></div>
                                 </div>
@@ -454,7 +459,8 @@
         let currentBgm = null; let bgmOn = false;
         let bgSiangPlayer = 'siang'; 
         let ttsJepangText = "";
-        let babTerpilih = []; // nyimpen ID 'buku-bab' e.g., '1-5'
+        let babTerpilih = []; 
+        let isSemuaTerpilih = false;
 
         window.globalSpeechUtterance = null;
         let progress = 0;
@@ -498,20 +504,35 @@
             let loadingText = document.getElementById('load-text');
             let bellyLoad = document.getElementById('belly-load');
 
-            fetch('kosakata.xlsx')
-            .then(res => { 
-                if(!res.ok) throw new Error(); 
-                return res.arrayBuffer(); 
-            })
-            .then(data => {
-                let wb = XLSX.read(new Uint8Array(data), {type: 'array'});
-                dataVocab = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+            // Tarik 2 file secara simultan
+            Promise.allSettled([
+                fetch('shokyuu1.xlsx').then(res => { if(!res.ok) throw new Error(); return res.arrayBuffer(); }),
+                fetch('shokyuu2.xlsx').then(res => { if(!res.ok) throw new Error(); return res.arrayBuffer(); })
+            ]).then(results => {
+                dataVocab = [];
+                let adaData = false;
+
+                if(results[0].status === 'fulfilled') {
+                    let wb1 = XLSX.read(new Uint8Array(results[0].value), {type: 'array'});
+                    let data1 = XLSX.utils.sheet_to_json(wb1.Sheets[wb1.SheetNames[0]]);
+                    data1.forEach(d => { d.buku_internal = 1; dataVocab.push(d); }); // Auto-Tag Buku 1
+                    adaData = true;
+                }
                 
-                document.getElementById('area-upload').style.display = 'none'; 
+                if(results[1].status === 'fulfilled') {
+                    let wb2 = XLSX.read(new Uint8Array(results[1].value), {type: 'array'});
+                    let data2 = XLSX.utils.sheet_to_json(wb2.Sheets[wb2.SheetNames[0]]);
+                    data2.forEach(d => { d.buku_internal = 2; dataVocab.push(d); }); // Auto-Tag Buku 2
+                    adaData = true;
+                }
+
+                if(!adaData) {
+                    document.getElementById('area-upload').style.display = 'block'; 
+                } else {
+                    document.getElementById('area-upload').style.display = 'none'; 
+                }
+                
                 selesaiLoading(loadInterval, loadingBar, loadingText, bellyLoad);
-            })
-            .catch(err => { 
-                selesaiLoading(loadInterval, loadingBar, loadingText, bellyLoad); 
             });
         };
 
@@ -530,6 +551,26 @@
                     setTimeout(()=> { loginScreen.classList.add('active-screen'); }, 50);
                 }, 800);
             }, 500);
+        }
+
+        // Tampil Error Aesthetic Validasi
+        function tampilError(pesan) {
+            maininSound('sfx-wrong');
+            let w = document.getElementById('mobile-wrap');
+            let flashOver = document.getElementById('flash-overlay');
+            let popupErr = document.getElementById('popup-error');
+            let errMsg = document.getElementById('error-msg');
+            
+            errMsg.innerText = pesan;
+            popupErr.style.display = 'flex';
+            w.classList.add('shake');
+            flashOver.style.backgroundColor = "rgba(255, 0, 0, 0.4)";
+            
+            setTimeout(() => {
+                w.classList.remove('shake');
+                flashOver.style.backgroundColor = "transparent";
+                popupErr.style.display = 'none';
+            }, 2000);
         }
 
         function maininSound(id) {
@@ -557,7 +598,7 @@
                 window.globalSpeechUtterance = u;
                 window.speechSynthesis.speak(u);
             } else {
-                alert("Browser tidak mendukung fitur suara.");
+                tampilError("Browser tidak mendukung fitur suara.");
             }
         }
 
@@ -626,19 +667,20 @@
                 reader.onload = (e) => {
                     try {
                         let wb = XLSX.read(new Uint8Array(reader.result), {type: 'array'});
-                        dataVocab = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+                        let data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+                        data.forEach(d => { d.buku_internal = d.Buku || d.buku || 1; });
+                        dataVocab = data;
                         document.getElementById('area-upload').style.display = 'none';
                     } catch(err) {
-                        alert("Format file tidak didukung atau corrupt.");
+                        tampilError("Format file tidak didukung atau corrupt.");
                     }
                 };
             } catch (err) { console.log(err); }
         });
 
         function prosesNama() {
-            maininSound('sfx-click');
             let nama = document.getElementById('input-nama').value.toLowerCase().trim();
-            if(!nama) return alert("Silakan isi nama terlebih dahulu.");
+            if(!nama) return tampilError("Isi nama dulu dong bossku!");
             
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -648,8 +690,9 @@
             
             if(nama === "anggun") { playerUtama = "anggun"; playerLawan = "aksa"; bgSiangPlayer = 'siang-swap'; } 
             else if (nama === "aksa" || nama === "nanda" || nama === "ananda") { playerUtama = "aksa"; playerLawan = "anggun"; bgSiangPlayer = 'siang'; } 
-            else { return alert("Akses tidak dikenali."); }
+            else { return tampilError("Nama nggak terdaftar boss!"); }
 
+            maininSound('sfx-click');
             gantiBackground(bgSiangPlayer); 
             let capNama = nama.charAt(0).toUpperCase() + nama.slice(1);
             document.getElementById('sapaan-home').innerText = `Selamat datang, ${capNama}`;
@@ -704,6 +747,7 @@
             if(babTerpilih.includes(id)) {
                 babTerpilih = babTerpilih.filter(x => x !== id);
                 el.classList.remove('selected');
+                isSemuaTerpilih = false; 
             } else {
                 babTerpilih.push(id);
                 el.classList.add('selected');
@@ -711,29 +755,52 @@
         }
 
         function pilihSemuaGlobal() {
-            maininSound('sfx-click');
-            babTerpilih = [];
-            for(let b=1; b<=2; b++){
-                for(let i=1; i<=18; i++){
-                    babTerpilih.push(`${b}-${i}`);
-                    document.getElementById(`s${b}-bab-${i}`).classList.add('selected');
+            if(isSemuaTerpilih) {
+                hapusSemuaGlobal(false);
+                isSemuaTerpilih = false;
+            } else {
+                maininSound('sfx-click');
+                babTerpilih = [];
+                for(let b=1; b<=2; b++){
+                    for(let i=1; i<=18; i++){
+                        babTerpilih.push(`${b}-${i}`);
+                        document.getElementById(`s${b}-bab-${i}`).classList.add('selected');
+                    }
                 }
+                isSemuaTerpilih = true;
             }
         }
 
-        function hapusSemuaGlobal() {
-            maininSound('sfx-click');
+        function hapusSemuaGlobal(withSound = true) {
+            if(withSound) maininSound('sfx-click');
             babTerpilih = [];
+            isSemuaTerpilih = false;
             document.querySelectorAll('.bab-box').forEach(el => el.classList.remove('selected'));
         }
 
         function pilihFullBuku(buku) {
             maininSound('sfx-click');
+            
+            let allSelected = true;
             for(let i=1; i<=18; i++){
-                let id = `${buku}-${i}`;
-                if(!babTerpilih.includes(id)) {
-                    babTerpilih.push(id);
-                    document.getElementById(`s${buku}-bab-${i}`).classList.add('selected');
+                if(!babTerpilih.includes(`${buku}-${i}`)) {
+                    allSelected = false; break;
+                }
+            }
+
+            if(allSelected) {
+                for(let i=1; i<=18; i++){
+                    babTerpilih = babTerpilih.filter(x => x !== `${buku}-${i}`);
+                    document.getElementById(`s${buku}-bab-${i}`).classList.remove('selected');
+                }
+                isSemuaTerpilih = false;
+            } else {
+                for(let i=1; i<=18; i++){
+                    let id = `${buku}-${i}`;
+                    if(!babTerpilih.includes(id)) {
+                        babTerpilih.push(id);
+                        document.getElementById(`s${buku}-bab-${i}`).classList.add('selected');
+                    }
                 }
             }
         }
@@ -750,12 +817,12 @@
 
         function prosesRandom() {
             let count = parseInt(document.getElementById('input-random-count').value);
-            if(isNaN(count) || count <= 0) return alert("Masukkan jumlah yang valid.");
+            if(isNaN(count) || count <= 0) return tampilError("Isi angka yang valid bossku!");
+            if(!dataVocab || dataVocab.length === 0) return tampilError("Data kosa kata belum termuat!");
+            if(count > dataVocab.length) return tampilError(`Soalnya nggak nyampe segitu boss, sisa ${dataVocab.length} doang!`);
             
             maininSound('sfx-click');
             document.getElementById('popup-random').style.display = 'none';
-            
-            if(!dataVocab || dataVocab.length === 0) return alert("Data kosakata kosong.");
             
             let shuffledAll = acak([...dataVocab]);
             filteredData = shuffledAll.slice(0, count);
@@ -765,7 +832,7 @@
 
         function mulaiGameNormal() {
             if(babTerpilih.length === 0) {
-                alert("Pilih minimal satu bab untuk memulai.");
+                tampilError("Pilih minimal satu bab bossku!");
                 return;
             }
             maininSound('sfx-click');
@@ -778,7 +845,7 @@
                 
                 filteredData = dataVocab.filter(k => {
                     let valBab = parseInt(k.bab || k.Bab || k.BAB || 0);
-                    let valBuku = parseInt(k.buku || k.Buku || k.BUKU || 1); 
+                    let valBuku = parseInt(k.buku_internal); 
                     return babTerpilih.includes(`${valBuku}-${valBab}`);
                 }); 
                 
@@ -796,7 +863,7 @@
                 if(hb) hb.pause();
                 
                 if(!filteredData || filteredData.length === 0) {
-                    alert("Data kosakata kosong untuk bab yang dipilih.");
+                    tampilError("Waduh, data kosong di bab yang lu pilih!");
                     return;
                 }
                 
@@ -824,7 +891,7 @@
                 });
 
                 if(soalKuis.length === 0) {
-                    alert("Data tidak valid. Pastikan kolom 'kanji' dan 'arti' terisi.");
+                    tampilError("Data tidak valid boss. Pastikan kolom 'kanji' dan 'arti' terisi.");
                     return;
                 }
 
@@ -849,7 +916,7 @@
                 pindahScreen('screen-play'); 
                 
             } catch(err) {
-                alert("Terjadi kesalahan sistem: " + err.message);
+                tampilError("Mesin nabrak error pas mulai boss: " + err.message);
             }
         }
 
